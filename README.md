@@ -57,66 +57,79 @@ DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
 
 ## AWS Production Deploy (App Runner)
 
-This repository includes:
-- Dockerfile
-- .dockerignore
-- GitHub Action: .github/workflows/deploy-aws-apprunner.yml
-- Bootstrap script: scripts/aws-bootstrap-apprunner.ps1
+This repository includes automated GitHub Actions workflows + helper scripts for AWS App Runner deployment.
 
-### Reuse the same AWS account as CompanyFactory
+### Deployment Architecture
 
-Yes. You can deploy this app in the same account used by CompanyFactory (257074874944).
+- **Container**: Dockerfile multi-stage build (Node 20, Next.js, Prisma migrations)
+- **Image Registry**: AWS ECR (Elastic Container Registry)
+- **Hosting**: AWS App Runner (fully managed container service)
+- **Database**: PostgreSQL (Neon or RDS)
+- **CI/CD**: GitHub Actions with OIDC
 
-If you want to reuse the same GitHub OIDC deploy role (CompanyFactory-GhDeploy), allow this repo in the trust policy:
+### Deploy to AWS in 5 minutes
 
+1. **Set up AWS credentials** (one-time):
+```powershell
+aws sso login --profile cf-prod --no-browser
+./scripts/aws-setup-apprunner-roles.ps1
+```
+
+2. **Allow TripChecklist repo on the deploy role** (one-time):
 ```powershell
 ./scripts/aws-allow-tripchecklist-on-companyfactory-role.ps1
 ```
 
-Then set GitHub secret AWS_DEPLOY_ROLE_ARN in this repository to that role ARN.
+3. **Set GitHub repository secrets**:
+   - `AWS_DEPLOY_ROLE_ARN`: the CompanyFactory-GhDeploy role ARN (shown by the trust policy script)
+   - Example: `arn:aws:iam::257074874944:role/CompanyFactory-GhDeploy`
 
-### One-time setup
-
-1. Authenticate AWS CLI:
-
+4. **Push to main branch**:
 ```powershell
-aws login
+git add .
+git commit -m "Deploy to AWS"
+git push
+```
+   This triggers the GitHub Action, which builds and pushes the image to ECR.
+
+5. **Once image is in ECR**, create the App Runner service:
+```powershell
+./scripts/aws-create-apprunner-service.ps1 `
+  -DatabaseUrl "postgresql://..." `
+  -AuthSecret "..." `
+  -GoogleId "..." `
+  -GoogleSecret "..." `
+  -MicrosoftId "..." `
+  -MicrosoftSecret "..." `
+  -OpenAiKey "..."
 ```
 
-2. Build and push first image to ECR:
+The service will be live within 2-3 minutes.
 
-```powershell
-aws ecr create-repository --repository-name tripchecklist --region us-east-1
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
-docker build -t tripchecklist:latest .
-docker tag tripchecklist:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/tripchecklist:latest
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/tripchecklist:latest
-```
+### Scripts
 
-3. Create App Runner service:
+- `scripts/aws-setup-apprunner-roles.ps1` — Create IAM roles for App Runner (one-time)
+- `scripts/aws-allow-tripchecklist-on-companyfactory-role.ps1` — Update deploy role trust (one-time)
+- `scripts/aws-create-apprunner-service.ps1` — Create/deploy the service
 
-```powershell
-./scripts/aws-bootstrap-apprunner.ps1 \
-  -Region us-east-1 \
-  -AccountId <account-id> \
-  -ServiceName tripchecklist \
-  -ImageTag latest \
-  -DatabaseUrl "<postgres-url>" \
-  -AuthSecret "<auth-secret>" \
-  -NextAuthUrl "https://<apprunner-domain>" \
-  -GoogleId "<google-id>" \
-  -GoogleSecret "<google-secret>" \
-  -MicrosoftId "<microsoft-id>" \
-  -MicrosoftSecret "<microsoft-secret>" \
-  -MicrosoftIssuer "https://login.microsoftonline.com/common/v2.0" \
-  -OpenAiApiKey "<openai-key>"
-```
+### Environment Variables
 
-4. Configure GitHub secrets:
-- AWS_DEPLOY_ROLE_ARN
-- AWS_APP_RUNNER_SERVICE_ARN
+Required in App Runner:
+- `DATABASE_URL` — PostgreSQL connection string
+- `AUTH_SECRET` — NextAuth secret (generate: `npx auth secret`)
+- `NEXTAUTH_URL` — Production domain
+- `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`
+- `AUTH_MICROSOFT_ENTRA_ID_ID`, `AUTH_MICROSOFT_ENTRA_ID_SECRET`
+- `OPENAI_API_KEY`, `OPENAI_MODEL`
 
-After this, every push to main auto-deploys to AWS App Runner.
+### GitHub Actions Workflow
+
+The workflow `.github/workflows/deploy-aws-apprunner.yml` automatically:
+1. Checks out code on push to `main`
+2. Assumes the GitHub OIDC role (CompanyFactory-GhDeploy)
+3. Logs in to ECR
+4. Builds and pushes the Docker image
+5. Triggers App Runner auto-deployment (if service exists)
 
 ## Useful Commands
 
