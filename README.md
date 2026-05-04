@@ -63,6 +63,18 @@ This repository includes:
 - GitHub Action: .github/workflows/deploy-aws-apprunner.yml
 - Bootstrap script: scripts/aws-bootstrap-apprunner.ps1
 
+### Reuse the same AWS account as CompanyFactory
+
+Yes. You can deploy this app in the same account used by CompanyFactory (257074874944).
+
+If you want to reuse the same GitHub OIDC deploy role (CompanyFactory-GhDeploy), allow this repo in the trust policy:
+
+```powershell
+./scripts/aws-allow-tripchecklist-on-companyfactory-role.ps1
+```
+
+Then set GitHub secret AWS_DEPLOY_ROLE_ARN in this repository to that role ARN.
+
 ### One-time setup
 
 1. Authenticate AWS CLI:
