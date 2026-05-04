@@ -1,15 +1,16 @@
 param(
   [string]$RoleName = "CompanyFactory-GhDeploy",
   [string]$Owner = "ignaciodemarco",
-  [string]$Repo = "TripChecklist"
+  [string]$Repo = "TripChecklist",
+  [string]$Profile = "cf-prod"
 )
 
 $ErrorActionPreference = "Stop"
 
-$repoSubject = "repo:$Owner/$Repo:*"
+$repoSubject = "repo:${Owner}/${Repo}:*"
 
 Write-Host "Reading current trust policy from role $RoleName..."
-$raw = aws iam get-role --role-name $RoleName --query "Role.AssumeRolePolicyDocument" --output json
+$raw = aws iam get-role --role-name $RoleName --query "Role.AssumeRolePolicyDocument" --output json --profile $Profile
 $policy = $raw | ConvertFrom-Json
 
 $updated = $false
@@ -50,6 +51,6 @@ $tempFile = Join-Path $PSScriptRoot "companyfactory-gh-deploy-trust-policy.json"
 $policy | ConvertTo-Json -Depth 20 | Set-Content -Path $tempFile -Encoding UTF8
 
 Write-Host "Updating trust policy to allow $repoSubject ..."
-aws iam update-assume-role-policy --role-name $RoleName --policy-document file://$tempFile | Out-Null
+aws iam update-assume-role-policy --role-name $RoleName --policy-document file://$tempFile --profile $Profile | Out-Null
 
 Write-Host "Done. Role $RoleName now trusts GitHub OIDC tokens from $repoSubject."
