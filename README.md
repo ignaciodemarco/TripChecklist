@@ -1,95 +1,117 @@
-# 🧳 Trip Checklist
+# Trip Checklist
 
 Weather-aware smart packing list, with per-user accounts (Google or Microsoft sign-in), saved trips,
 editable personal defaults, and an Imperial / Metric toggle.
 
-Built with **Next.js 15 + TypeScript + Tailwind + Prisma (SQLite) + NextAuth (Auth.js v5)**.
+Built with Next.js 15 + TypeScript + Tailwind + Prisma + NextAuth (Auth.js v5).
 
----
-
-## Quick start (local)
+## Quick Start (Local)
 
 ```powershell
 # 1. Install
 npm install
 
-# 2. Copy env and fill in values (see "OAuth setup" below)
+# 2. Copy env and fill in values
 copy .env.example .env
 
 # 3. Generate a secret for NextAuth
-npx auth secret      # writes AUTH_SECRET into .env
+npx auth secret
 
-# 4. Initialize the database
+# 4. Run migrations
 npx prisma migrate dev --name init
 
-# 5. Run
+# 5. Run app
 npm run dev
-# → http://localhost:3000
+# http://localhost:3001
 ```
 
-The two seed emails (`ignacio.demarco@bairesdev.com`, `magui.jpc@gmail.com`) get the
-"Ropa para Viajes" spreadsheet pre-loaded as **editable** personal defaults the first time they sign in.
-Other users start with empty defaults and can build their own list (or load the template) in **Settings**.
+## Database
 
----
+This project uses PostgreSQL in production.
 
-## OAuth setup
+Recommended:
+- Local development: Neon free PostgreSQL
+- Production: Neon, Amazon RDS PostgreSQL, or any managed PostgreSQL
+
+Set DATABASE_URL in .env:
+
+```env
+DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
+```
+
+## OAuth Setup
 
 ### Google
 
-1. Go to <https://console.cloud.google.com/> → create a project (or pick one).
-2. **APIs & Services → OAuth consent screen** → External → fill app name, support email, developer email → Save.
-3. **APIs & Services → Credentials → + Create credentials → OAuth client ID**
-   - Application type: **Web application**
-   - **Authorized JavaScript origins**: `http://localhost:3000`
-   - **Authorized redirect URIs**: `http://localhost:3000/api/auth/callback/google`
-4. Copy the Client ID + Secret into `.env`:
+1. Create OAuth credentials in Google Cloud Console.
+2. Add redirect URIs:
+   - http://localhost:3001/api/auth/callback/google
+   - https://your-production-domain/api/auth/callback/google
 
-   ```
-   AUTH_GOOGLE_ID=...
-   AUTH_GOOGLE_SECRET=...
-   ```
+### Microsoft Entra ID
 
-### Microsoft (Entra ID / personal + work accounts)
+1. Create App Registration in Azure.
+2. Add redirect URIs:
+   - http://localhost:3001/api/auth/callback/microsoft-entra-id
+   - https://your-production-domain/api/auth/callback/microsoft-entra-id
 
-1. Go to <https://portal.azure.com> → **Microsoft Entra ID → App registrations → New registration**.
-2. Name: `Trip Checklist`. Supported account types: **Accounts in any organizational directory and personal Microsoft accounts** (lets both your BairesDev and Gmail-linked Microsoft accounts work).
-3. **Redirect URI**: Web → `http://localhost:3000/api/auth/callback/microsoft-entra-id`
-4. After creation, copy **Application (client) ID** → `AUTH_MICROSOFT_ENTRA_ID_ID`.
-5. **Certificates & secrets → New client secret** → copy the *Value* (shown only once) → `AUTH_MICROSOFT_ENTRA_ID_SECRET`.
-6. Keep `AUTH_MICROSOFT_ENTRA_ID_ISSUER=https://login.microsoftonline.com/common/v2.0`.
+## AWS Production Deploy (App Runner)
 
-> When deploying, add the production callback URLs to **both** providers
-> (`https://your-domain/api/auth/callback/google` and `…/microsoft-entra-id`).
+This repository includes:
+- Dockerfile
+- .dockerignore
+- GitHub Action: .github/workflows/deploy-aws-apprunner.yml
+- Bootstrap script: scripts/aws-bootstrap-apprunner.ps1
 
----
+### One-time setup
 
-## Project structure
-
-```
-prisma/schema.prisma        — DB schema (User, Trip, TripItem, Account, Session)
-src/auth.ts                 — NextAuth config (Google + Microsoft, seeds defaults on first login)
-src/lib/db.ts               — Prisma client singleton
-src/lib/packing.ts          — Rules engine (temp/rain/snow/UV/wind/activities/trip type)
-src/lib/weather.ts          — Open-Meteo forecast + climate fallback
-src/lib/units.ts            — °F↔°C, mph↔km/h, in↔mm conversions
-src/lib/seed-defaults.ts    — Spreadsheet items pre-loaded for two seeded users
-src/app/api/                — REST endpoints (trips, items, geocode, me)
-src/app/trips/              — Trips list + new-trip form + detail/checklist
-src/app/settings/           — Units toggle + editable personal defaults
-src/app/login/              — Google / Microsoft sign-in buttons
-```
-
----
-
-## Useful commands
+1. Authenticate AWS CLI:
 
 ```powershell
-npm run dev          # start dev server
-npm run build        # production build
-npm start            # serve built app
-npm run db:studio    # GUI to inspect SQLite contents
-npm run db:migrate   # create & apply a new migration
+aws login
 ```
 
-The legacy single-file prototype is preserved as `index.html` (no server needed) — safe to delete.
+2. Build and push first image to ECR:
+
+```powershell
+aws ecr create-repository --repository-name tripchecklist --region us-east-1
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
+docker build -t tripchecklist:latest .
+docker tag tripchecklist:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/tripchecklist:latest
+docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/tripchecklist:latest
+```
+
+3. Create App Runner service:
+
+```powershell
+./scripts/aws-bootstrap-apprunner.ps1 \
+  -Region us-east-1 \
+  -AccountId <account-id> \
+  -ServiceName tripchecklist \
+  -ImageTag latest \
+  -DatabaseUrl "<postgres-url>" \
+  -AuthSecret "<auth-secret>" \
+  -NextAuthUrl "https://<apprunner-domain>" \
+  -GoogleId "<google-id>" \
+  -GoogleSecret "<google-secret>" \
+  -MicrosoftId "<microsoft-id>" \
+  -MicrosoftSecret "<microsoft-secret>" \
+  -MicrosoftIssuer "https://login.microsoftonline.com/common/v2.0" \
+  -OpenAiApiKey "<openai-key>"
+```
+
+4. Configure GitHub secrets:
+- AWS_DEPLOY_ROLE_ARN
+- AWS_APP_RUNNER_SERVICE_ARN
+
+After this, every push to main auto-deploys to AWS App Runner.
+
+## Useful Commands
+
+```powershell
+npm run dev
+npm run build
+npm start
+npm run db:studio
+npm run db:migrate
+```
