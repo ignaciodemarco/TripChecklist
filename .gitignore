@@ -11,3 +11,7 @@ prisma/dev.db-journal
 Thumbs.db
 *.xlsx
 *.xls
+scripts/*.local.txt
+scripts/*.local.json
+scripts/companyfactory-gh-deploy-trust-policy.json
+scripts/apprunner-service-config.json
