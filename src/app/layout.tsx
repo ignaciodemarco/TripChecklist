@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
+import GlobalErrorReporter from "./GlobalErrorReporter";
 
 export const metadata: Metadata = {
   title: "Trip Checklist",
@@ -13,6 +14,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className="min-h-screen" suppressHydrationWarning>
+        <GlobalErrorReporter />
         <div className="max-w-6xl mx-auto p-4 sm:p-8">
           <header className="flex items-center justify-between mb-6 no-print">
             <Link href="/" className="flex items-center gap-2">

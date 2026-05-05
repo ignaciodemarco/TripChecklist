@@ -3,6 +3,7 @@ import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import EditTripModal from "./EditTripModal";
 import CompareModal from "./CompareModal";
+import { reportClientError, errToFields } from "@/lib/client-log";
 
 type Item = {
   id: string; itemKey: string; label: string; category: string;
@@ -51,7 +52,10 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
       setCompareLoading(true);
       try {
         const r = await fetch(`/api/trips/${trip.id}/compare`);
-        if (!r.ok) { alert(`Compare failed: HTTP ${r.status}`); return; }
+        if (!r.ok) {
+          const txt = await r.text().catch(() => "");
+          throw new Error(`HTTP ${r.status} ${txt.slice(0, 120)}`);
+        }
         const d = await r.json();
         const aiByKey: Record<string, number> = {};
         const aiByLabel: Record<string, number> = {};
@@ -74,11 +78,16 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
           !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
         );
         setCompareData({ aiByKey, formulaByKey, aiByLabel, formulaByLabel, aiOnly, formulaOnly });
+        setCompareInline(true);
+      } catch (err) {
+        reportClientError("trip.compare_failed", { tripId: trip.id, ...errToFields(err) });
+        alert(`Compare failed: ${(err as Error).message || err}`);
       } finally {
         setCompareLoading(false);
       }
+    } else {
+      setCompareInline(true);
     }
-    setCompareInline(true);
   }
 
   function compareQtys(it: Item): { ai?: number; formula?: number } {
@@ -129,6 +138,9 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
           source: created.source,
         }]);
       }
+    } catch (err) {
+      reportClientError("trip.add_default_failed", { tripId: trip.id, itemKey: d.itemKey, label: d.label, ...errToFields(err) });
+      alert(`Could not add "${d.label}". See console / logs.`);
     } finally {
       setAiBusy(null);
     }
@@ -168,12 +180,33 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
 
   function toggle(it: Item) {
     const checked = !it.checked;
+    const prev = it.checked;
     setItems((xs) => xs.map((x) => x.id === it.id ? { ...x, checked } : x));
-    startTransition(() => { api({ op: "toggle", itemId: it.id, checked }); });
+    startTransition(async () => {
+      try {
+        const r = await api({ op: "toggle", itemId: it.id, checked });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      } catch (err) {
+        // Roll back optimistic toggle so UI matches reality.
+        setItems((xs) => xs.map((x) => x.id === it.id ? { ...x, checked: prev } : x));
+        reportClientError("trip.toggle_failed", { tripId: trip.id, itemId: it.id, ...errToFields(err) });
+        alert("Could not save check state. Please try again.");
+      }
+    });
   }
   function remove(it: Item) {
+    const snapshot = items;
     setItems((xs) => xs.filter((x) => x.id !== it.id));
-    startTransition(() => { api({ op: "delete", itemId: it.id }); });
+    startTransition(async () => {
+      try {
+        const r = await api({ op: "delete", itemId: it.id });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      } catch (err) {
+        setItems(snapshot);
+        reportClientError("trip.delete_failed", { tripId: trip.id, itemId: it.id, ...errToFields(err) });
+        alert("Could not delete item. Please try again.");
+      }
+    });
   }
   async function addItem(category: string) {
     const label = window.prompt("Add item (AI will pick quantity & category):")?.trim();
@@ -201,6 +234,9 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
       } else {
         router.refresh();
       }
+    } catch (err) {
+      reportClientError("trip.add_item_failed", { tripId: trip.id, ...errToFields(err) });
+      alert(`Could not add item. See logs.`);
     } finally {
       setAiBusy(null);
     }
@@ -221,22 +257,39 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
         const u = byId.get(x.id);
         if (!u) return x;
         let reasons: string[] = [];
-        try { reasons = JSON.parse(u.reasons || "[]"); } catch {}
+        try { reasons = JSON.parse(u.reasons || "[]"); } catch (parseErr) {
+          reportClientError("trip.reevaluate_reasons_parse", { tripId: trip.id, itemId: x.id, raw: String(u.reasons).slice(0, 200), ...errToFields(parseErr) });
+        }
         return { ...x, qty: u.qty, category: u.category, reasons };
       }));
+    } catch (err) {
+      reportClientError("trip.reevaluate_failed", { tripId: trip.id, ...errToFields(err) });
+      alert(`Re-evaluate failed: ${(err as Error).message || err}`);
     } finally {
       setAiBusy(null);
     }
   }
   async function reset() {
     if (!confirm("Uncheck all items?")) return;
-    await api({ op: "reset" });
-    setItems((xs) => xs.map((x) => ({ ...x, checked: false })));
+    try {
+      const r = await api({ op: "reset" });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      setItems((xs) => xs.map((x) => ({ ...x, checked: false })));
+    } catch (err) {
+      reportClientError("trip.reset_failed", { tripId: trip.id, ...errToFields(err) });
+      alert("Could not reset.");
+    }
   }
   async function deleteTrip() {
     if (!confirm("Delete this trip permanently?")) return;
-    await fetch(`/api/trips/${trip.id}`, { method: "DELETE" });
-    router.push("/trips"); router.refresh();
+    try {
+      const r = await fetch(`/api/trips/${trip.id}`, { method: "DELETE" });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      router.push("/trips"); router.refresh();
+    } catch (err) {
+      reportClientError("trip.delete_failed", { tripId: trip.id, ...errToFields(err) });
+      alert("Could not delete trip.");
+    }
   }
 
   const w = trip.weather;

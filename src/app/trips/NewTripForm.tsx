@@ -74,7 +74,10 @@ export default function NewTripForm() {
         const r = await fetch(`/api/geocode?q=${encodeURIComponent(city)}`);
         const data = await r.json();
         if (data.results?.[0]) chosen = data.results[0];
-      } catch {}
+      } catch (err) {
+        const { reportClientError, errToFields } = await import("@/lib/client-log");
+        reportClientError("trip.geocode_failed", { query: city, ...errToFields(err) });
+      }
     }
     if (!chosen) { setError("Could not find that city."); return; }
     if (new Date(endDate) < new Date(startDate)) { setError("End date must be after start date."); return; }

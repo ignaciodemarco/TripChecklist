@@ -60,6 +60,10 @@ export default function EditTripModal({ trip, onClose }: Props) {
       }
       router.refresh();
       onClose();
+    } catch (err: any) {
+      const { reportClientError, errToFields } = await import("@/lib/client-log");
+      reportClientError("trip.edit_save_failed", { tripId: trip.id, ...errToFields(err) });
+      setError(err?.message || "Save failed. See logs.");
     } finally {
       setSaving(false);
     }
