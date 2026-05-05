@@ -24,12 +24,20 @@ export default function CompareModal({ tripId, onClose }: { tripId: string; onCl
       .catch((e) => setError(e?.message || "Failed to load comparison"));
   }, [tripId]);
 
-  // Union of categories so the two columns line up.
+  // Match the sorting used in TripView so the modal mirrors the trip layout.
+  const CATEGORY_ORDER = [
+    "Footwear", "Clothing — Basics", "Clothing — Tops", "Clothing — Bottoms",
+    "Clothing — Outerwear", "Clothing — Formal", "Snow gear", "Sports",
+    "Accessories", "Toiletries", "Health", "Documents", "Electronics", "Misc",
+  ];
   const cats = data
     ? Array.from(new Set([
         ...Object.keys(data.ai.summary.byCategory),
         ...Object.keys(data.formula.summary.byCategory),
-      ])).sort()
+      ])).sort((a, b) => {
+        const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+        return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      })
     : [];
 
   // Group items by category for the side-by-side detail view.
@@ -105,14 +113,30 @@ export default function CompareModal({ tripId, onClose }: { tripId: string; onCl
               </ul>
             </div>
 
-            {/* Detailed lists */}
+            {/* Detailed lists — paired by category so both sides line up */}
             <details className="rounded-xl ring-1 ring-slate-800">
               <summary className="px-4 py-3 cursor-pointer hover:bg-white/5 text-sm font-semibold">
                 Show full item lists
               </summary>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                <ItemColumn title="AI" color="violet" byCat={aiByCat} cats={cats} />
-                <ItemColumn title="Formula" color="sky" byCat={formulaByCat} cats={cats} />
+              <div className="p-4 space-y-4">
+                <div className="grid grid-cols-2 gap-4 text-xs uppercase tracking-wider sticky top-0 bg-slate-900 py-1 z-10">
+                  <div className="text-violet-300">Saved (current trip)</div>
+                  <div className="text-sky-300">Formula</div>
+                </div>
+                {cats.map((cat) => {
+                  const a = aiByCat[cat] || [];
+                  const f = formulaByCat[cat] || [];
+                  if (a.length === 0 && f.length === 0) return null;
+                  return (
+                    <div key={cat}>
+                      <div className="text-xs font-semibold text-slate-400 mb-1 border-b border-slate-800 pb-1">{cat}</div>
+                      <div className="grid grid-cols-2 gap-4 items-start">
+                        <ItemList items={a} accent="violet" />
+                        <ItemList items={f} accent="sky" />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </details>
 
@@ -130,37 +154,19 @@ export default function CompareModal({ tripId, onClose }: { tripId: string; onCl
   );
 }
 
-function ItemColumn({
-  title, color, byCat, cats,
-}: {
-  title: string;
-  color: "violet" | "sky";
-  byCat: Record<string, Item[]>;
-  cats: string[];
-}) {
-  const titleClass = color === "violet" ? "text-violet-300" : "text-sky-300";
+function ItemList({ items, accent }: { items: Item[]; accent: "violet" | "sky" }) {
+  const qtyClass = accent === "violet" ? "text-violet-300" : "text-sky-300";
+  if (items.length === 0) {
+    return <div className="text-xs text-slate-600 italic">—</div>;
+  }
   return (
-    <div>
-      <div className={`text-xs uppercase tracking-wider mb-2 ${titleClass}`}>{title}</div>
-      <div className="space-y-3">
-        {cats.map((cat) => {
-          const items = byCat[cat] || [];
-          if (items.length === 0) return null;
-          return (
-            <div key={cat}>
-              <div className="text-xs font-semibold text-slate-400 mb-1">{cat}</div>
-              <ul className="text-sm space-y-0.5">
-                {items.map((it, i) => (
-                  <li key={`${it.itemKey}-${i}`} className="flex items-baseline gap-2">
-                    <span className="text-slate-500 tabular-nums shrink-0">×{it.qty}</span>
-                    <span>{it.label}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <ul className="text-sm space-y-0.5 min-w-0">
+      {items.map((it, i) => (
+        <li key={`${it.itemKey}-${i}`} className="flex items-baseline gap-2">
+          <span className={`tabular-nums shrink-0 ${qtyClass}`}>×{it.qty}</span>
+          <span className="break-words min-w-0">{it.label}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
