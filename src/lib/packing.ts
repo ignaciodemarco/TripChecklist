@@ -301,8 +301,7 @@ export function buildPackingList(
   add("eyeMask",     "Sleep / eye mask",             "Misc", 1 * N);
 
   if (days >= 7) {
-    add("laundryBag", "Laundry bag",         "Misc",     1, ["Long trip"]);
-    add("extraShoes", "Extra pair of shoes", "Footwear", 1 * N, ["Long trip"]);
+    add("laundryBag", "Laundry bag", "Misc", 1, ["Long trip"]);
   }
 
   // ============================================================
