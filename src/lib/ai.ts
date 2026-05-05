@@ -339,8 +339,11 @@ export async function aiGeneratePackingList(
   defaults: DefaultItem[] = []
 ): Promise<PackingItem[]> {
   const key = getKey();
+  // We no longer ask the AI to repeat the user's personal defaults — it kept
+  // dropping items from long lists. Instead we tell it to focus on trip-aware
+  // additions, then merge defaults in deterministically below.
   const defaultsBlock = defaults.length
-    ? `\n\nUSER'S PERSONAL DEFAULTS — these are concepts the user wants to ALWAYS see in their packing list. You MUST include an item for each one (use the same itemKey and a similar label so it merges correctly), and YOU DECIDE THE QTY based on trip length, travelers, and the activity / weather rules above. Use trip-aware quantities. Concrete formulas you MUST follow:\n  • socks: ceil(days * 0.6) per person, cap 8\n  • underwear: ceil(days * 1.0) per person, cap 10\n  • t-shirts: ceil(days * 0.5) per person, cap 7\n  • sneakers / walking shoes: ceil(days * 0.27) per person, cap 5  (e.g. 5 days=2, 10 days=3, 13 days=4, 20 days=5)\n  • pants: ceil(days * 0.3) per person, cap 4\n  • ski passes / passport / wallet / single accessories: 1 per person (do NOT scale by days)\n${defaults.map((d) => `- itemKey: ${d.itemKey} | label: ${d.label} | category: ${d.category}`).join("\n")}`
+    ? `\n\nThe user already has a personal master list of items they always pack (toiletries, basics, electronics, documents, etc.) which will be merged in automatically AFTER your response. Do NOT repeat that list. Instead, focus on:\n  - Trip-aware quantities for clothing basics (socks, underwear, t-shirts, pants, sneakers — use the formulas above).\n  - Weather-driven items (rain jacket, gloves, sunscreen, etc.).\n  - Activity-driven items (ski gear, swim, hiking, business formal, etc.).\n  - Anything else specific to ${ctx.city || "this destination"} the master list wouldn't cover.\n  For the clothing-basics formulas, you MUST follow:\n  • socks: ceil(days * 0.6) per person, cap 8\n  • underwear: ceil(days * 1.0) per person, cap 10\n  • t-shirts: ceil(days * 0.5) per person, cap 7\n  • sneakers / walking shoes: ceil(days * 0.27) per person, cap 5  (e.g. 5d=2, 10d=3, 13d=4, 20d=5)\n  • pants: ceil(days * 0.3) per person, cap 4`
     : "";
 
   const userMsg = `Trip context: ${tripContextLine(ctx)}${defaultsBlock}
@@ -378,6 +381,7 @@ Return JSON: {"items": [{"itemKey": "camelCase", "label": "Display Name", "categ
   if (arr.length === 0) throw new Error("AI returned empty list");
 
   const seenKeys = new Set<string>();
+  const seenLabels = new Set<string>();
   const out: PackingItem[] = [];
   // Map default itemKeys so we can mark AI items that came from defaults.
   const defaultKeys = new Set(defaults.map((d) => d.itemKey));
@@ -390,6 +394,7 @@ Return JSON: {"items": [{"itemKey": "camelCase", "label": "Display Name", "categ
     // De-dup by key (AI sometimes repeats).
     if (seenKeys.has(itemKey)) continue;
     seenKeys.add(itemKey);
+    seenLabels.add(normLabelForMerge(String(it.label)));
 
     const category = (CATEGORIES as readonly string[]).includes(it.category) ? it.category : "Misc";
     const qty = Math.max(1, Math.round(Number(it.qty) || 1));
@@ -403,6 +408,53 @@ Return JSON: {"items": [{"itemKey": "camelCase", "label": "Display Name", "categ
       source: defaultKeys.has(itemKey) ? "user-default" : "rule",
     });
   }
+
+  // ============================================================
+  // Deterministic merge of user defaults: every personal default is GUARANTEED
+  // to appear in the final list. AI's qty wins if it already covered the item;
+  // otherwise we add it ourselves with a trip-aware qty (singletons stay 1,
+  // per-person items scale by travelers, clothing items use the same formulas
+  // we tell the AI about).
+  // ============================================================
+  const N = Math.max(1, ctx.travelers || 1);
+  const days = Math.max(1, ctx.days || 1);
+  const effDays = ctx.laundry ? Math.max(3, Math.ceil(days / 2)) : days;
+  for (const d of defaults) {
+    const labelKey = normLabelForMerge(d.label);
+    if (seenKeys.has(d.itemKey) || seenLabels.has(labelKey)) continue;
+    out.push({
+      itemKey: d.itemKey,
+      label: d.label,
+      category: d.category,
+      qty: defaultQty(d.itemKey, N, effDays),
+      reasons: ["From your defaults"],
+      source: "user-default",
+    });
+    seenKeys.add(d.itemKey);
+    seenLabels.add(labelKey);
+  }
   return out;
+}
+
+// Normalize labels so e.g. "Sneakers / shoes (Zapatillas)" merges with
+// "Sneakers / walking shoes" — lowercased, parenthetical stripped, alnum only.
+function normLabelForMerge(s: string): string {
+  return s.toLowerCase().replace(/\([^)]*\)/g, "").replace(/[^a-z0-9]+/g, "").trim();
+}
+
+// Trip-aware default qty for items the AI didn't already cover. Most defaults
+// are singletons (passport, comb, perfume, etc.), so qty=1*N is the safe
+// baseline; clothing basics use the spreadsheet formulas.
+function defaultQty(itemKey: string, N: number, effDays: number): number {
+  switch (itemKey) {
+    case "socks":     return Math.min(8, Math.ceil(effDays * 0.6)) * N;
+    case "underwear": return Math.min(10, Math.ceil(effDays * 1.0)) * N;
+    case "tshirts":   return Math.min(7, Math.ceil(effDays * 0.5)) * N;
+    case "sneakers":  return Math.min(5, Math.max(1, Math.ceil(effDays * 0.27))) * N;
+    case "pants":     return Math.min(4, Math.max(1, Math.ceil(effDays * 0.3))) * N;
+    case "sportsKit": return Math.min(4, Math.max(1, Math.ceil(effDays / 2))) * N;
+    case "plasticBags": return 3;
+    default:          return 1 * N;
+  }
 }
 

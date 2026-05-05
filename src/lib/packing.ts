@@ -265,48 +265,27 @@ export function buildPackingList(
   }
 
   // ============================================================
-  // ALWAYS — toiletries / health / docs / electronics / misc
+  // ALWAYS — minimal weather/activity-driven items only.
+  // The original Excel master list lives in seed-defaults.ts and is merged in
+  // via user defaults; the formula no longer invents toiletries / health /
+  // electronics that weren't in the spreadsheet (Power bank, Earbuds, Sleep
+  // mask, Shampoo, Band-aids, Travel insurance, Anti-diarrheal, Laundry bag
+  // were all removed). Add them in Settings → Personal defaults if you want
+  // them on every trip.
   // ============================================================
-  add("toothbrush",  "Toothbrush",        "Toiletries", 1 * N);
-  add("toothpaste",  "Toothpaste",        "Toiletries", 1);
-  add("deodorant",   "Deodorant",         "Toiletries", 1 * N);
-  add("shampoo",     "Shampoo / soap",    "Toiletries", 1);
-  add("moisturizer", "Moisturizer",       "Toiletries", 1);
-  add("razor",       "Razor",             "Toiletries", 1 * N);
-  add("comb",        "Comb / brush",      "Toiletries", 1 * N);
-  add("nailClipper", "Nail clipper",      "Toiletries", 1);
-  add("perfume",     "Perfume / cologne", "Toiletries", 1 * N);
-  add("hairGel",     "Hair gel / product","Toiletries", 1);
   if (minC !== null && minC < 10) add("lipBalm", "Lip balm", "Toiletries", 1 * N, ["Cold/dry weather"]);
 
-  add("aspirin",    "Aspirin / ibuprofen",          "Health", 1);
-  add("bandaids",   "Band-aids",                    "Health", 1);
-  add("antibiotic", "Antibiotic (Azithro / Cipro)", "Health", 1);
-  if (trip.international) add("travelMeds", "Anti-diarrheal / Pepto", "Health", 1, ["International trip"]);
-
-  add("id",    "ID / driver license",   "Documents", 1 * N);
-  add("cards", "Credit / debit cards",  "Documents", 1 * N);
-  add("cash",  "Cash (local currency)", "Documents", 1);
   if (trip.international) {
-    add("passport",  "Passport",              "Documents",   1 * N, ["International trip"]);
-    add("adapter",   "Plug adapter",          "Electronics", 1,     ["International trip"]);
-    add("insurance", "Travel insurance card", "Documents",   1,     ["International trip"]);
+    add("adapter", "Plug adapter", "Electronics", 1, ["International trip"]);
   }
 
-  add("phoneCharger", "Phone charger",        "Electronics", 1 * N);
-  add("powerBank",    "Power bank",           "Electronics", 1);
-  add("earbuds",      "Earbuds / headphones", "Electronics", 1 * N);
+  add("phoneCharger", "Phone charger", "Electronics", 1 * N);
 
   add("plasticBags", "Plastic bags (laundry / wet)", "Misc", 3);
-  add("eyeMask",     "Sleep / eye mask",             "Misc", 1 * N);
 
   // Towel: only when accommodation likely won't provide one
   if (isType("camping") || isType("hostel") || isType("roadtrip") || acts.has("camping")) {
     add("towel", "Towel (Toalla)", "Misc", 1 * N, ["Camping / hostel / road trip — no hotel towels"]);
-  }
-
-  if (days >= 7) {
-    add("laundryBag", "Laundry bag", "Misc", 1, ["Long trip"]);
   }
 
   // ============================================================
