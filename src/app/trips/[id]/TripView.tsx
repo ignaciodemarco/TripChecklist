@@ -287,7 +287,9 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className={`font-medium ${it.checked ? "line-through" : ""}`}>{it.label}</span>
-                      <span className="text-xs px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">×{it.qty}</span>
+                      <span title={compareInline ? "Saved quantity (what's actually in your list)" : undefined} className={`text-xs px-1.5 py-0.5 rounded ${compareInline ? "bg-emerald-500/20 text-emerald-200" : "bg-slate-800 text-slate-300"}`}>
+                        {compareInline ? `Saved ×${it.qty}` : `×${it.qty}`}
+                      </span>
                       {compareInline && (() => {
                         const c = compareQtys(it);
                         return (
