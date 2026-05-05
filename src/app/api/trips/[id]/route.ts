@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { serializeTrip } from "../route";
+import { serializeTrip } from "../_helpers";
 import { fetchForecast } from "@/lib/weather";
 import { generatePackingItems } from "@/lib/packing-generate";
 import { withApiLog } from "@/lib/api-log";

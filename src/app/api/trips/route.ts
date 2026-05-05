@@ -6,6 +6,7 @@ import { generatePackingItems } from "@/lib/packing-generate";
 import { withApiLog } from "@/lib/api-log";
 import { log } from "@/lib/logger";
 import type { DefaultItem, UnitSystem } from "@/lib/types";
+import { safeParse, serializeTrip } from "./_helpers";
 
 export const GET = withApiLog("trips.list", async () => {
   const session = await auth();
@@ -78,18 +79,3 @@ export const POST = withApiLog("trips.create", async (req: Request) => {
   log.info("trip.created", { userId, tripId: trip.id, city: trip.city, itemsGenerated: items.length, packingSource: itemsSource });
   return NextResponse.json(serializeTrip(trip));
 });
-
-function safeParse<T>(s: string | null | undefined, fallback: T): T {
-  try { return s ? JSON.parse(s) : fallback; } catch { return fallback; }
-}
-
-export function serializeTrip(trip: any) {
-  return {
-    ...trip,
-    activities: safeParse(trip.activities, []),
-    weather: safeParse(trip.weather, null),
-    items: (trip.items || [])
-      .sort((a: any, b: any) => a.sortOrder - b.sortOrder)
-      .map((it: any) => ({ ...it, reasons: safeParse(it.reasons, []) })),
-  };
-}
