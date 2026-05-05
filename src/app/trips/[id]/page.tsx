@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { redirect, notFound } from "next/navigation";
 import TripView from "./TripView";
 import { unitLabels } from "@/lib/units";
+import type { DefaultItem } from "@/lib/types";
 
 export default async function TripDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -18,6 +19,7 @@ export default async function TripDetail({ params }: { params: Promise<{ id: str
 
   const user = await prisma.user.findUnique({ where: { id: userId } });
   const unitSystem = (user?.unitSystem as "imperial" | "metric") || "imperial";
+  const userDefaults = safeParse<DefaultItem[]>(user?.defaults, []);
 
   const trip2 = {
     ...trip,
@@ -26,7 +28,7 @@ export default async function TripDetail({ params }: { params: Promise<{ id: str
     items: trip.items.map((it) => ({ ...it, reasons: safeParse<string[]>(it.reasons, []) })),
   };
 
-  return <TripView trip={trip2} unitLabels={unitLabels(unitSystem)} unitSystem={unitSystem} />;
+  return <TripView trip={trip2} unitLabels={unitLabels(unitSystem)} unitSystem={unitSystem} userDefaults={userDefaults} />;
 }
 
 function safeParse<T>(s: string | null | undefined, fallback: T): T {

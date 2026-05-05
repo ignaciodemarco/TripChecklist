@@ -9,10 +9,13 @@ type Item = {
   qty: number; reasons: string[]; checked: boolean; source: string;
 };
 
+type DefaultItem = { itemKey: string; label: string; category: string; qty: number };
+
 type Props = {
   trip: any;
   unitLabels: { temp: string; wind: string; precip: string; snow: string };
   unitSystem: "imperial" | "metric";
+  userDefaults?: DefaultItem[];
 };
 
 const CATEGORY_ORDER = [
@@ -21,7 +24,7 @@ const CATEGORY_ORDER = [
   "Accessories", "Toiletries", "Health", "Documents", "Electronics", "Misc",
 ];
 
-export default function TripView({ trip, unitLabels: lbl }: Props) {
+export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: Props) {
   const router = useRouter();
   const [items, setItems] = useState<Item[]>(trip.items);
   const [pending, startTransition] = useTransition();
@@ -85,6 +88,59 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
       ai: compareData.aiByKey[it.itemKey] ?? compareData.aiByLabel[lk],
       formula: compareData.formulaByKey[it.itemKey] ?? compareData.formulaByLabel[lk],
     };
+  }
+
+  // Personal defaults that are NOT currently in the trip — show them so the
+  // user can re-add anything the AI / formula skipped. Match by itemKey first,
+  // then fall back to a normalized label compare.
+  const missingDefaults = useMemo(() => {
+    if (!userDefaults?.length) return [] as DefaultItem[];
+    const tripKeys = new Set(items.map((i) => i.itemKey));
+    const tripLabels = new Set(items.map((i) => normLabel(i.label)));
+    return userDefaults.filter((d) =>
+      !tripKeys.has(d.itemKey) && !tripLabels.has(normLabel(d.label))
+    );
+  }, [items, userDefaults]);
+  const missingByCat = useMemo(() => {
+    const g: Record<string, DefaultItem[]> = {};
+    for (const d of missingDefaults) (g[d.category] ||= []).push(d);
+    return g;
+  }, [missingDefaults]);
+
+  async function addDefault(d: DefaultItem) {
+    setAiBusy("add");
+    try {
+      const r = await api({ op: "add", label: d.label, category: d.category, qty: 1 });
+      const data = await r.json().catch(() => null);
+      if (!r.ok) {
+        alert(`Could not add item:\n${data?.message || data?.error || r.statusText}`);
+        return;
+      }
+      const created = data?.item;
+      if (created) {
+        setItems((xs) => [...xs, {
+          id: created.id,
+          itemKey: created.itemKey,
+          label: created.label,
+          category: created.category,
+          qty: created.qty,
+          reasons: (() => { try { return JSON.parse(created.reasons || "[]"); } catch { return []; } })(),
+          checked: !!created.checked,
+          source: created.source,
+        }]);
+      }
+    } finally {
+      setAiBusy(null);
+    }
+  }
+
+  async function addAllMissingDefaults() {
+    if (!confirm(`Add all ${missingDefaults.length} missing default items to this trip? AI will pick qty + category for each.`)) return;
+    for (const d of missingDefaults) {
+      // Sequential — keeps server load reasonable and lets users see progress.
+      // eslint-disable-next-line no-await-in-loop
+      await addDefault(d);
+    }
   }
 
   const grouped = useMemo(() => {
@@ -351,6 +407,42 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
                 {compareData.formulaOnly.length === 0 && <li className="text-slate-500">—</li>}
               </ul>
             </div>
+          </div>
+        </section>
+      )}
+      {missingDefaults.length > 0 && (
+        <section className="glass rounded-2xl p-5 ring-1 ring-violet-500/20 no-print">
+          <div className="flex items-start justify-between flex-wrap gap-2">
+            <div>
+              <h3 className="font-semibold text-violet-200">From your defaults — not in this trip</h3>
+              <p className="text-xs text-slate-400 mt-1">
+                {missingDefaults.length} item{missingDefaults.length === 1 ? "" : "s"} from your Settings → Personal defaults that the AI / formula didn't include for this trip context. Click any to add it.
+              </p>
+            </div>
+            <button onClick={addAllMissingDefaults} disabled={aiBusy !== null}
+              className="px-3 py-2 rounded-lg bg-violet-700/30 ring-1 ring-violet-500 hover:bg-violet-700/50 text-violet-100 text-xs disabled:opacity-50">
+              {aiBusy === "add" ? "Adding…" : `+ Add all (${missingDefaults.length})`}
+            </button>
+          </div>
+          <div className="mt-4 space-y-3">
+            {Object.keys(missingByCat).sort((a, b) => {
+              const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+              return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+            }).map((cat) => (
+              <div key={cat}>
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">{cat}</div>
+                <ul className="flex flex-wrap gap-2">
+                  {missingByCat[cat].map((d) => (
+                    <li key={d.itemKey}>
+                      <button onClick={() => addDefault(d)} disabled={aiBusy !== null}
+                        className="text-sm px-2.5 py-1 rounded-lg bg-slate-900/80 ring-1 ring-slate-700 hover:ring-violet-500 hover:bg-violet-900/30 disabled:opacity-50">
+                        + {d.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </section>
       )}
