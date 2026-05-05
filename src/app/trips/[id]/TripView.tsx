@@ -2,6 +2,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import EditTripModal from "./EditTripModal";
+import CompareModal from "./CompareModal";
 
 type Item = {
   id: string; itemKey: string; label: string; category: string;
@@ -26,6 +27,7 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
   const [pending, startTransition] = useTransition();
   const [aiBusy, setAiBusy] = useState<"add" | "reeval" | null>(null);
   const [editing, setEditing] = useState(false);
+  const [comparing, setComparing] = useState(false);
 
   const grouped = useMemo(() => {
     const g: Record<string, Item[]> = {};
@@ -145,6 +147,7 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
               className="px-3 py-2 rounded-lg bg-violet-700/40 ring-1 ring-violet-500 hover:bg-violet-700/60 text-violet-100 text-sm disabled:opacity-50">
               {aiBusy === "reeval" ? "Re-evaluating…" : "✨ Re-evaluate with AI"}
             </button>
+            <button onClick={() => setComparing(true)} className="px-3 py-2 rounded-lg bg-amber-700/30 ring-1 ring-amber-500 hover:bg-amber-700/50 text-amber-100 text-sm">⚖️ Compare AI vs Formula</button>
             <button onClick={deleteTrip} className="px-3 py-2 rounded-lg bg-rose-900/40 ring-1 ring-rose-700 hover:bg-rose-900/60 text-rose-200 text-sm">Delete trip</button>
           </div>
         </div>
@@ -243,6 +246,7 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
         ))}
       </div>
       {editing && <EditTripModal trip={trip} onClose={() => setEditing(false)} />}
+      {comparing && <CompareModal tripId={trip.id} onClose={() => setComparing(false)} />}
     </div>
   );
 }
