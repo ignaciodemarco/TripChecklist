@@ -134,14 +134,17 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
     return g;
   }, [missingDefaults]);
 
-  async function addDefault(d: DefaultItem) {
+  // Adds an item to this trip with an explicit qty + category, skipping the
+  // AI-suggest round-trip on the server. Used by the "+" buttons in both the
+  // missing-defaults section and the inline compare panel.
+  async function addSuggestion(opts: { label: string; category: string; qty: number; source?: string }) {
     setAiBusy("add");
     try {
-      const r = await api({ op: "add", label: d.label, category: d.category, qty: 1 });
+      const r = await api({ op: "add", label: opts.label, category: opts.category, qty: opts.qty });
       const data = await r.json().catch(() => null);
       if (!r.ok) {
         alert(`Could not add item:\n${data?.message || data?.error || r.statusText}`);
-        return;
+        return null;
       }
       const created = data?.item;
       if (created) {
@@ -156,12 +159,35 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
           source: created.source,
         }]);
       }
+      return created;
     } catch (err) {
-      reportClientError("trip.add_default_failed", { tripId: trip.id, itemKey: d.itemKey, label: d.label, ...errToFields(err) });
-      alert(`Could not add "${d.label}". See console / logs.`);
+      reportClientError("trip.add_suggestion_failed", { tripId: trip.id, label: opts.label, source: opts.source, ...errToFields(err) });
+      alert(`Could not add "${opts.label}". See console / logs.`);
+      return null;
     } finally {
       setAiBusy(null);
     }
+  }
+
+  async function addDefault(d: DefaultItem) {
+    await addSuggestion({ label: d.label, category: d.category, qty: 1, source: "default" });
+  }
+
+  // Adds a Formula-only or AI-only suggestion from the inline compare panel.
+  // After success the row is removed from the panel so it doesn't suggest itself again.
+  async function addCompareSuggestion(it: { itemKey: string; label: string; category: string; qty: number }, kind: "ai" | "formula") {
+    const created = await addSuggestion({ label: it.label, category: it.category, qty: it.qty, source: `compare:${kind}` });
+    if (!created) return;
+    setCompareData((cd) => {
+      if (!cd) return cd;
+      const filterFn = (x: { itemKey: string; label: string }) =>
+        x.itemKey !== it.itemKey && normLabel(x.label) !== normLabel(it.label);
+      return {
+        ...cd,
+        aiOnly: cd.aiOnly.filter(filterFn),
+        formulaOnly: cd.formulaOnly.filter(filterFn),
+      };
+    });
   }
 
   async function addAllMissingDefaults() {
@@ -447,15 +473,20 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
       {compareInline && compareData && (compareData.aiOnly.length > 0 || compareData.formulaOnly.length > 0) && (
         <section className="glass rounded-2xl p-5 ring-1 ring-amber-500/20 no-print">
           <h3 className="font-semibold text-amber-200">Items not in this trip</h3>
-          <p className="text-xs text-slate-400 mt-1">Suggested by the formula but not currently in your saved list.</p>
+          <p className="text-xs text-slate-400 mt-1">Suggested by the formula or AI but not in your saved list. Click <span className="text-emerald-300 font-semibold">+</span> to add.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
             <div>
               <div className="text-xs uppercase tracking-wider text-violet-300 mb-1">Saved only ({compareData.aiOnly.length})</div>
               <ul className="text-sm space-y-1">
                 {compareData.aiOnly.map((it) => (
-                  <li key={it.itemKey + it.label} className="flex justify-between gap-2">
-                    <span>{it.label} <span className="text-slate-500 text-xs">({it.category})</span></span>
+                  <li key={it.itemKey + it.label} className="flex justify-between gap-2 items-center">
+                    <span className="flex-1 min-w-0">{it.label} <span className="text-slate-500 text-xs">({it.category})</span></span>
                     <span className="text-violet-200 tabular-nums">×{it.qty}</span>
+                    <button
+                      onClick={() => addCompareSuggestion(it, "ai")}
+                      disabled={aiBusy !== null}
+                      title={`Add ${it.label} ×${it.qty} to this trip`}
+                      className="px-2 py-0.5 rounded bg-emerald-600/20 hover:bg-emerald-600/40 ring-1 ring-emerald-500/40 text-emerald-200 text-xs font-bold disabled:opacity-40">+</button>
                   </li>
                 ))}
                 {compareData.aiOnly.length === 0 && <li className="text-slate-500">—</li>}
@@ -465,9 +496,14 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
               <div className="text-xs uppercase tracking-wider text-sky-300 mb-1">Formula only ({compareData.formulaOnly.length})</div>
               <ul className="text-sm space-y-1">
                 {compareData.formulaOnly.map((it) => (
-                  <li key={it.itemKey + it.label} className="flex justify-between gap-2">
-                    <span>{it.label} <span className="text-slate-500 text-xs">({it.category})</span></span>
+                  <li key={it.itemKey + it.label} className="flex justify-between gap-2 items-center">
+                    <span className="flex-1 min-w-0">{it.label} <span className="text-slate-500 text-xs">({it.category})</span></span>
                     <span className="text-sky-200 tabular-nums">×{it.qty}</span>
+                    <button
+                      onClick={() => addCompareSuggestion(it, "formula")}
+                      disabled={aiBusy !== null}
+                      title={`Add ${it.label} ×${it.qty} to this trip`}
+                      className="px-2 py-0.5 rounded bg-emerald-600/20 hover:bg-emerald-600/40 ring-1 ring-emerald-500/40 text-emerald-200 text-xs font-bold disabled:opacity-40">+</button>
                   </li>
                 ))}
                 {compareData.formulaOnly.length === 0 && <li className="text-slate-500">—</li>}
