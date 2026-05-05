@@ -29,6 +29,64 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
   const [editing, setEditing] = useState(false);
   const [comparing, setComparing] = useState(false);
 
+  // Inline AI vs Formula comparison: when toggled on, fetch /compare and
+  // build itemKey -> qty maps so we can render both numbers next to each item.
+  const [compareInline, setCompareInline] = useState(false);
+  const [compareLoading, setCompareLoading] = useState(false);
+  const [compareData, setCompareData] = useState<{
+    aiByKey: Record<string, number>;
+    formulaByKey: Record<string, number>;
+    aiByLabel: Record<string, number>;
+    formulaByLabel: Record<string, number>;
+    aiOnly: { itemKey: string; label: string; category: string; qty: number }[];
+    formulaOnly: { itemKey: string; label: string; category: string; qty: number }[];
+  } | null>(null);
+
+  async function toggleCompareInline() {
+    if (compareInline) { setCompareInline(false); return; }
+    if (!compareData) {
+      setCompareLoading(true);
+      try {
+        const r = await fetch(`/api/trips/${trip.id}/compare`);
+        if (!r.ok) { alert(`Compare failed: HTTP ${r.status}`); return; }
+        const d = await r.json();
+        const aiByKey: Record<string, number> = {};
+        const aiByLabel: Record<string, number> = {};
+        for (const it of d.ai.items || []) {
+          aiByKey[it.itemKey] = it.qty;
+          aiByLabel[normLabel(it.label)] = it.qty;
+        }
+        const formulaByKey: Record<string, number> = {};
+        const formulaByLabel: Record<string, number> = {};
+        for (const it of d.formula.items || []) {
+          formulaByKey[it.itemKey] = it.qty;
+          formulaByLabel[normLabel(it.label)] = it.qty;
+        }
+        const tripKeys = new Set(items.map((i) => i.itemKey));
+        const tripLabels = new Set(items.map((i) => normLabel(i.label)));
+        const aiOnly = (d.ai.items || []).filter((it: any) =>
+          !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
+        );
+        const formulaOnly = (d.formula.items || []).filter((it: any) =>
+          !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
+        );
+        setCompareData({ aiByKey, formulaByKey, aiByLabel, formulaByLabel, aiOnly, formulaOnly });
+      } finally {
+        setCompareLoading(false);
+      }
+    }
+    setCompareInline(true);
+  }
+
+  function compareQtys(it: Item): { ai?: number; formula?: number } {
+    if (!compareData) return {};
+    const lk = normLabel(it.label);
+    return {
+      ai: compareData.aiByKey[it.itemKey] ?? compareData.aiByLabel[lk],
+      formula: compareData.formulaByKey[it.itemKey] ?? compareData.formulaByLabel[lk],
+    };
+  }
+
   const grouped = useMemo(() => {
     const g: Record<string, Item[]> = {};
     for (const it of items) (g[it.category] ||= []).push(it);
@@ -148,6 +206,10 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
               {aiBusy === "reeval" ? "Re-evaluating…" : "✨ Re-evaluate with AI"}
             </button>
             <button onClick={() => setComparing(true)} className="px-3 py-2 rounded-lg bg-amber-700/30 ring-1 ring-amber-500 hover:bg-amber-700/50 text-amber-100 text-sm">⚖️ Compare AI vs Formula</button>
+            <button onClick={toggleCompareInline} disabled={compareLoading}
+              className={`px-3 py-2 rounded-lg ring-1 text-sm disabled:opacity-50 ${compareInline ? "bg-amber-600/40 ring-amber-400 text-amber-50" : "bg-amber-700/20 ring-amber-600 hover:bg-amber-700/40 text-amber-200"}`}>
+              {compareLoading ? "Loading…" : compareInline ? "Hide inline counts" : "🔢 Show AI/Formula counts"}
+            </button>
             <button onClick={deleteTrip} className="px-3 py-2 rounded-lg bg-rose-900/40 ring-1 ring-rose-700 hover:bg-rose-900/60 text-rose-200 text-sm">Delete trip</button>
           </div>
         </div>
@@ -226,6 +288,19 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className={`font-medium ${it.checked ? "line-through" : ""}`}>{it.label}</span>
                       <span className="text-xs px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">×{it.qty}</span>
+                      {compareInline && (() => {
+                        const c = compareQtys(it);
+                        return (
+                          <>
+                            <span title="AI suggestion" className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded ${c.ai != null ? "bg-violet-500/20 text-violet-200" : "bg-slate-800 text-slate-500"}`}>
+                              AI {c.ai != null ? `×${c.ai}` : "—"}
+                            </span>
+                            <span title="Formula suggestion" className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded ${c.formula != null ? "bg-sky-500/20 text-sky-200" : "bg-slate-800 text-slate-500"}`}>
+                              F {c.formula != null ? `×${c.formula}` : "—"}
+                            </span>
+                          </>
+                        );
+                      })()}
                       {it.source === "user-default" && (
                         <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300">default</span>
                       )}
@@ -245,10 +320,46 @@ export default function TripView({ trip, unitLabels: lbl }: Props) {
           </details>
         ))}
       </div>
+      {compareInline && compareData && (compareData.aiOnly.length > 0 || compareData.formulaOnly.length > 0) && (
+        <section className="glass rounded-2xl p-5 ring-1 ring-amber-500/20 no-print">
+          <h3 className="font-semibold text-amber-200">Items not in this trip</h3>
+          <p className="text-xs text-slate-400 mt-1">Suggested by AI or Formula but not currently in your list.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-violet-300 mb-1">AI only ({compareData.aiOnly.length})</div>
+              <ul className="text-sm space-y-1">
+                {compareData.aiOnly.map((it) => (
+                  <li key={it.itemKey + it.label} className="flex justify-between gap-2">
+                    <span>{it.label} <span className="text-slate-500 text-xs">({it.category})</span></span>
+                    <span className="text-violet-200 tabular-nums">×{it.qty}</span>
+                  </li>
+                ))}
+                {compareData.aiOnly.length === 0 && <li className="text-slate-500">—</li>}
+              </ul>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wider text-sky-300 mb-1">Formula only ({compareData.formulaOnly.length})</div>
+              <ul className="text-sm space-y-1">
+                {compareData.formulaOnly.map((it) => (
+                  <li key={it.itemKey + it.label} className="flex justify-between gap-2">
+                    <span>{it.label} <span className="text-slate-500 text-xs">({it.category})</span></span>
+                    <span className="text-sky-200 tabular-nums">×{it.qty}</span>
+                  </li>
+                ))}
+                {compareData.formulaOnly.length === 0 && <li className="text-slate-500">—</li>}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
       {editing && <EditTripModal trip={trip} onClose={() => setEditing(false)} />}
       {comparing && <CompareModal tripId={trip.id} onClose={() => setComparing(false)} />}
     </div>
   );
+}
+
+function normLabel(s: string): string {
+  return s.toLowerCase().replace(/\([^)]*\)/g, "").replace(/[^a-z0-9]+/g, "").trim();
 }
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
