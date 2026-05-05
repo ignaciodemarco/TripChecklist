@@ -197,3 +197,147 @@ export function buildAiContextFromTrip(trip: any, unitSystem: "imperial" | "metr
     weather,
   };
 }
+
+// ============================================================
+// FULL PACKING LIST GENERATION (AI-first)
+// ============================================================
+//
+// Replaces the rule-based formula in src/lib/packing.ts as the primary
+// way to build a trip's packing list. Falls back to the formula when
+// the AI call fails so trip creation never blocks on OpenAI being up.
+//
+// Returns items in the same shape as buildPackingList() so the rest of
+// the app (DB save, UI render, re-evaluate) doesn't need changes.
+
+import type { DefaultItem, PackingItem } from "./types";
+
+export type AiGeneratedItem = {
+  itemKey: string;
+  label: string;
+  category: string;
+  qty: number;
+  reason: string;
+};
+
+const FULL_LIST_SYSTEM_PROMPT = `You are an expert travel packing assistant. Given a trip's full context, generate a COMPLETE packing list tailored to the destination, weather, duration, activities, group size, and laundry availability.
+
+CATEGORIES (must use exactly one of):
+${CATEGORIES.join(", ")}
+
+QUANTITY RULES:
+- Per-traveler items (clothing, toiletries used individually, footwear): multiply by the number of travelers.
+- Shared items (chargers, adapter, first aid kit, laundry bag, plastic bags): qty = 1 regardless of group size, unless duplicates are clearly useful (e.g. multiple chargers for a couple).
+- Clothing rotation:
+    * With laundry: assume rewearing every 2-3 days (effective days = ceil(days / 2), min 3).
+    * Without laundry: 1 outfit/day, capped per item type.
+- Caps per traveler (do not exceed): underwear 10, socks 10, t-shirts 10, pants 4, shorts 4, sweaters 2, sneakers 3 pairs, dress shoes 1 pair.
+- Minimum is 1 (never return 0).
+- For trips < 3 days, keep counts modest; for trips > 14 days, hit the caps but don't exceed them.
+
+WEATHER RULES (use the provided min/max in Celsius):
+- minC < 0: include heavy coat, warm hat, gloves, thermals, boots.
+- minC < 10: include warm jacket, sweater(s), long pants only.
+- maxC > 25: include shorts, t-shirts, sun hat, sunglasses, sunscreen.
+- maxC > 30: light fabrics only, extra hydration items.
+- rainProb > 40%: include rain jacket / umbrella.
+- snowProb > 20% or activities include "ski"/"snowboard": include snow gear.
+
+ACTIVITY RULES:
+- "beach" / "swim": swimwear, beach towel, flip-flops, sunscreen.
+- "hike" / "hiking": hiking boots, daypack, water bottle.
+- "ski" / "snowboard": ski jacket, ski pants, goggles, gloves, thermals.
+- "gym": workout clothes, gym shoes.
+- "formal" / "business": dress shirt(s), dress shoes, blazer.
+- "running": running shoes, running shorts.
+
+ALWAYS INCLUDE (baseline, regardless of trip):
+- Underwear, socks, pants/shorts, t-shirts, sleepwear, walking shoes.
+- Phone charger, earbuds.
+- Toothbrush, toothpaste, deodorant, shampoo (travel size).
+- ID/driver license, credit cards, cash.
+- For international trips: passport, plug adapter, travel insurance card.
+
+ITEM KEY: short camelCase identifier unique within the list (e.g. "tShirts", "rainJacket", "phoneCharger"). Use the SAME key for the same concept across trips so user toggles can be preserved when rebuilt.
+
+REASON: one short phrase explaining WHY (e.g. "5 days, laundry", "rain prob 65%", "beach activity", "international trip"). Keep under 60 chars.
+
+Respond in strict JSON only.`;
+
+/**
+ * Generate a full packing list using AI. Returns PackingItem[] in the same
+ * shape as buildPackingList(). Caller is responsible for merging with user
+ * defaults if desired (we pass them into the prompt as context so the model
+ * can include them with proper quantities).
+ */
+export async function aiGeneratePackingList(
+  ctx: AiTripContext,
+  defaults: DefaultItem[] = []
+): Promise<PackingItem[]> {
+  const key = getKey();
+  const defaultsBlock = defaults.length
+    ? `\n\nUSER'S PERSONAL DEFAULTS (always include these, scale qty by travelers if appropriate):\n${defaults.map((d) => `- ${d.label} (category: ${d.category}, baseQty: ${d.qty})`).join("\n")}`
+    : "";
+
+  const userMsg = `Trip context: ${tripContextLine(ctx)}${defaultsBlock}
+
+Generate the COMPLETE packing list for this trip. Include EVERY item the traveler(s) should bring, organized into the fixed categories above. Be thorough but not redundant — do not include both "extra shoes" and a multi-pair sneakers entry; bump the qty on the existing item instead.
+
+Return JSON: {"items": [{"itemKey": "camelCase", "label": "Display Name", "category": one of [${CATEGORIES.join(", ")}], "qty": number, "reason": "short why"}, ...]}`;
+
+  const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify({
+      model: model(),
+      temperature: 0.3,
+      response_format: { type: "json_object" },
+      messages: [
+        { role: "system", content: FULL_LIST_SYSTEM_PROMPT },
+        { role: "user", content: userMsg },
+      ],
+    }),
+  });
+
+  if (!resp.ok) {
+    const t = await resp.text().catch(() => "");
+    throw new Error(`OpenAI error ${resp.status}: ${t.slice(0, 200)}`);
+  }
+  const data = await resp.json();
+  const raw = data?.choices?.[0]?.message?.content;
+  if (!raw) throw new Error("Empty AI response");
+  const parsed = JSON.parse(raw);
+  const arr = Array.isArray(parsed.items) ? parsed.items : [];
+  if (arr.length === 0) throw new Error("AI returned empty list");
+
+  const seenKeys = new Set<string>();
+  const out: PackingItem[] = [];
+  // Map default itemKeys so we can mark AI items that came from defaults.
+  const defaultKeys = new Set(defaults.map((d) => d.itemKey));
+  for (const it of arr) {
+    if (!it?.label) continue;
+    let itemKey = String(it.itemKey || "").trim();
+    if (!itemKey) {
+      itemKey = String(it.label).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || `item-${out.length}`;
+    }
+    // De-dup by key (AI sometimes repeats).
+    if (seenKeys.has(itemKey)) continue;
+    seenKeys.add(itemKey);
+
+    const category = (CATEGORIES as readonly string[]).includes(it.category) ? it.category : "Misc";
+    const qty = Math.max(1, Math.round(Number(it.qty) || 1));
+    const reason = String(it.reason || "AI generated").slice(0, 200);
+    out.push({
+      itemKey,
+      label: String(it.label).slice(0, 200),
+      category,
+      qty,
+      reasons: [reason],
+      source: defaultKeys.has(itemKey) ? "user-default" : "rule",
+    });
+  }
+  return out;
+}
+

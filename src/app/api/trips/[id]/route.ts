@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { serializeTrip } from "../route";
 import { fetchForecast } from "@/lib/weather";
-import { buildPackingList } from "@/lib/packing";
+import { generatePackingItems } from "@/lib/packing-generate";
 import { withApiLog } from "@/lib/api-log";
 import { log } from "@/lib/logger";
 import type { DefaultItem, UnitSystem } from "@/lib/types";
@@ -88,7 +88,9 @@ export const PATCH = withApiLog("trip.patch", async (req: Request, ctx: { params
       } catch { /* non-fatal */ }
       weatherJson = weather ? JSON.stringify(weather) : null;
 
-      const newItems = buildPackingList(next, weather, defaults, unitSystem);
+      const { items: newItems } = await generatePackingItems(
+        next, weather, defaults, unitSystem, { userId, tripId: id }
+      );
 
       // Preserve checked state of rule items by itemKey.
       const checkedByKey = new Map<string, boolean>();

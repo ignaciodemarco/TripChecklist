@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { fetchForecast } from "@/lib/weather";
-import { buildPackingList } from "@/lib/packing";
+import { generatePackingItems } from "@/lib/packing-generate";
 import { withApiLog } from "@/lib/api-log";
 import { log } from "@/lib/logger";
 import type { DefaultItem, UnitSystem } from "@/lib/types";
@@ -51,7 +51,9 @@ export const POST = withApiLog("trips.create", async (req: Request) => {
     international: !!international,
     activities: Array.isArray(activities) ? activities : [],
   };
-  const items = buildPackingList(tripInput, weather, defaults, unitSystem);
+  const { items, source: itemsSource } = await generatePackingItems(
+    tripInput, weather, defaults, unitSystem, { userId }
+  );
 
   const trip = await prisma.trip.create({
     data: {
@@ -73,7 +75,7 @@ export const POST = withApiLog("trips.create", async (req: Request) => {
     },
     include: { items: true },
   });
-  log.info("trip.created", { userId, tripId: trip.id, city: trip.city, days: items.length, itemsGenerated: items.length });
+  log.info("trip.created", { userId, tripId: trip.id, city: trip.city, itemsGenerated: items.length, packingSource: itemsSource });
   return NextResponse.json(serializeTrip(trip));
 });
 
