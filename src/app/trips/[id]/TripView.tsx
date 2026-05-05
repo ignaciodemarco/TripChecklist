@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import EditTripModal from "./EditTripModal";
 import CompareModal from "./CompareModal";
@@ -33,9 +33,9 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
   const [editing, setEditing] = useState(false);
   const [comparing, setComparing] = useState(false);
 
-  // Inline AI vs Formula comparison: when toggled on, fetch /compare and
-  // build itemKey -> qty maps so we can render both numbers next to each item.
-  const [compareInline, setCompareInline] = useState(false);
+  // Inline AI vs Formula comparison: shown by default on load. Loads /compare
+  // once and overlays a 'Formula ×N' badge next to each saved item.
+  const [compareInline, setCompareInline] = useState(true);
   const [compareLoading, setCompareLoading] = useState(false);
   const [compareData, setCompareData] = useState<{
     aiByKey: Record<string, number>;
@@ -46,48 +46,66 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
     formulaOnly: { itemKey: string; label: string; category: string; qty: number }[];
   } | null>(null);
 
+  async function loadCompareData() {
+    setCompareLoading(true);
+    try {
+      const r = await fetch(`/api/trips/${trip.id}/compare`);
+      if (!r.ok) {
+        const txt = await r.text().catch(() => "");
+        throw new Error(`HTTP ${r.status} ${txt.slice(0, 120)}`);
+      }
+      const d = await r.json();
+      const aiByKey: Record<string, number> = {};
+      const aiByLabel: Record<string, number> = {};
+      for (const it of d.ai.items || []) {
+        aiByKey[it.itemKey] = it.qty;
+        aiByLabel[normLabel(it.label)] = it.qty;
+      }
+      const formulaByKey: Record<string, number> = {};
+      const formulaByLabel: Record<string, number> = {};
+      for (const it of d.formula.items || []) {
+        formulaByKey[it.itemKey] = it.qty;
+        formulaByLabel[normLabel(it.label)] = it.qty;
+      }
+      const tripKeys = new Set(items.map((i) => i.itemKey));
+      const tripLabels = new Set(items.map((i) => normLabel(i.label)));
+      const aiOnly = (d.ai.items || []).filter((it: any) =>
+        !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
+      );
+      const formulaOnly = (d.formula.items || []).filter((it: any) =>
+        !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
+      );
+      setCompareData({ aiByKey, formulaByKey, aiByLabel, formulaByLabel, aiOnly, formulaOnly });
+    } catch (err) {
+      reportClientError("trip.compare_failed", { tripId: trip.id, ...errToFields(err) });
+      // Silent on auto-load (don't pop alerts on every page view); only alert
+      // when the user explicitly clicked the button.
+      throw err;
+    } finally {
+      setCompareLoading(false);
+    }
+  }
+
+  // Auto-load compare data on mount so inline Formula counts appear without
+  // requiring a button click.
+  useEffect(() => {
+    if (!compareData) {
+      loadCompareData().catch(() => { /* already logged */ });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function toggleCompareInline() {
     if (compareInline) { setCompareInline(false); return; }
     if (!compareData) {
-      setCompareLoading(true);
       try {
-        const r = await fetch(`/api/trips/${trip.id}/compare`);
-        if (!r.ok) {
-          const txt = await r.text().catch(() => "");
-          throw new Error(`HTTP ${r.status} ${txt.slice(0, 120)}`);
-        }
-        const d = await r.json();
-        const aiByKey: Record<string, number> = {};
-        const aiByLabel: Record<string, number> = {};
-        for (const it of d.ai.items || []) {
-          aiByKey[it.itemKey] = it.qty;
-          aiByLabel[normLabel(it.label)] = it.qty;
-        }
-        const formulaByKey: Record<string, number> = {};
-        const formulaByLabel: Record<string, number> = {};
-        for (const it of d.formula.items || []) {
-          formulaByKey[it.itemKey] = it.qty;
-          formulaByLabel[normLabel(it.label)] = it.qty;
-        }
-        const tripKeys = new Set(items.map((i) => i.itemKey));
-        const tripLabels = new Set(items.map((i) => normLabel(i.label)));
-        const aiOnly = (d.ai.items || []).filter((it: any) =>
-          !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
-        );
-        const formulaOnly = (d.formula.items || []).filter((it: any) =>
-          !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
-        );
-        setCompareData({ aiByKey, formulaByKey, aiByLabel, formulaByLabel, aiOnly, formulaOnly });
-        setCompareInline(true);
+        await loadCompareData();
       } catch (err) {
-        reportClientError("trip.compare_failed", { tripId: trip.id, ...errToFields(err) });
         alert(`Compare failed: ${(err as Error).message || err}`);
-      } finally {
-        setCompareLoading(false);
+        return;
       }
-    } else {
-      setCompareInline(true);
     }
+    setCompareInline(true);
   }
 
   function compareQtys(it: Item): { ai?: number; formula?: number } {
