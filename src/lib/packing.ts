@@ -300,6 +300,11 @@ export function buildPackingList(
   add("plasticBags", "Plastic bags (laundry / wet)", "Misc", 3);
   add("eyeMask",     "Sleep / eye mask",             "Misc", 1 * N);
 
+  // Towel: only when accommodation likely won't provide one
+  if (isType("camping") || isType("hostel") || isType("roadtrip") || acts.has("camping")) {
+    add("towel", "Towel (Toalla)", "Misc", 1 * N, ["Camping / hostel / road trip — no hotel towels"]);
+  }
+
   if (days >= 7) {
     add("laundryBag", "Laundry bag", "Misc", 1, ["Long trip"]);
   }

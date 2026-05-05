@@ -99,6 +99,9 @@ export default function EditTripModal({ trip, onClose }: Props) {
               <option value="ski">Ski</option>
               <option value="city">City</option>
               <option value="family">Family</option>
+              <option value="camping">Camping</option>
+              <option value="hostel">Hostel / Backpacking</option>
+              <option value="roadtrip">Road trip</option>
             </select>
           </label>
           <label className="text-sm">

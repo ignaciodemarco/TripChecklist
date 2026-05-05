@@ -300,6 +300,11 @@ TRIP TYPE === "ski" implies the ski activity even if not listed.
 TRIP TYPE === "beach" implies beach + swim activities even if not listed.
 
 ═══════════════════════════════════════════════════════════════
+ACCOMMODATION-DEPENDENT ITEMS:
+═══════════════════════════════════════════════════════════════
+  Bath towel ("Towel"): ONLY include for tripType in {camping, hostel, roadtrip} or activity "camping". Hotels and most rentals provide towels — do NOT add a bath towel for leisure/business/beach/ski/city trips. (Beach towel is separate and follows the beach/swim activity rule above.)
+
+═══════════════════════════════════════════════════════════════
 ANTI-REDUNDANCY:
 ═══════════════════════════════════════════════════════════════
 - Don't include both "extra shoes" and "sneakers" — bump qty on the existing item.

@@ -75,10 +75,12 @@ export const SEED_DEFAULTS: DefaultItem[] = [
   { itemKey: "btMask",       label: "Bluetooth night mask",           category: "Electronics", qty: 1 },
 
   // Misc / lifestyle
-  { itemKey: "towel",        label: "Towel (Toalla)",                 category: "Misc", qty: 1 },
+  // Note: towel and hand warmers used to live here as auto-defaults, but they
+  // are highly trip-dependent (towel = camping/hostel; hand warmers = freezing
+  // weather or skiing) so they are now generated conditionally by the rule
+  // engine in lib/packing.ts and the AI prompt in lib/ai.ts instead.
   { itemKey: "plasticBags",  label: "Plastic bags (Bolsas de nylon)", category: "Misc", qty: 3 },
   { itemKey: "pen",          label: "Pen (Birome)",                   category: "Misc", qty: 1 },
-  { itemKey: "handWarmer",   label: "Hand warmers (Calentador manos)", category: "Misc", qty: 1 },
   { itemKey: "boardGames",   label: "Board games",                    category: "Misc", qty: 1 },
   { itemKey: "itBag",        label: "IT bag (Bolsito de IT)",         category: "Misc", qty: 1 },
   { itemKey: "bidet",        label: "Portable bidet",                 category: "Misc", qty: 1 },

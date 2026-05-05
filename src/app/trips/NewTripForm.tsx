@@ -149,6 +149,9 @@ export default function NewTripForm() {
             <option value="ski">Ski / Snow</option>
             <option value="sports">Sports / Adventure</option>
             <option value="city">City break</option>
+            <option value="camping">Camping</option>
+            <option value="hostel">Hostel / Backpacking</option>
+            <option value="roadtrip">Road trip</option>
           </select>
         </div>
         <div>
