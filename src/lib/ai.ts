@@ -340,7 +340,7 @@ export async function aiGeneratePackingList(
 ): Promise<PackingItem[]> {
   const key = getKey();
   const defaultsBlock = defaults.length
-    ? `\n\nUSER'S PERSONAL DEFAULTS — these are concepts the user wants to ALWAYS see in their packing list. You MUST include an item for each one (using the same itemKey and a similar label so it merges correctly), but DECIDE THE QTY YOURSELF based on trip length, travelers, and activity rules above. The "baseQty" below is just the user's minimum personal preference for a single short trip — for longer trips you should bump it up using the same logic you'd use for any other item (e.g. sneakers / walking shoes for a 13-day trip = 3-4 pairs, not 1). Never go below baseQty × travelers.\n${defaults.map((d) => `- itemKey: ${d.itemKey} | label: ${d.label} | category: ${d.category} | baseQty (per person, minimum): ${d.qty}`).join("\n")}`
+    ? `\n\nUSER'S PERSONAL DEFAULTS — these are concepts the user wants to ALWAYS see in their packing list. You MUST include an item for each one (use the same itemKey and a similar label so it merges correctly), and YOU DECIDE THE QTY based on trip length, travelers, and the activity / weather rules above. Use trip-aware quantities just like any other item (e.g. socks for 13 days = 8 pairs/person, sneakers / walking shoes for 13 days = 3-4 pairs/person, ski passes = 1/person, passport = 1/person).\n${defaults.map((d) => `- itemKey: ${d.itemKey} | label: ${d.label} | category: ${d.category}`).join("\n")}`
     : "";
 
   const userMsg = `Trip context: ${tripContextLine(ctx)}${defaultsBlock}

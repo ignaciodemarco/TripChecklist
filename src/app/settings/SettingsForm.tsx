@@ -23,7 +23,7 @@ export default function SettingsForm({
 
   const [newLabel, setNewLabel] = useState("");
   const [newCat, setNewCat] = useState("Misc");
-  const [newQty, setNewQty] = useState(1);
+  const [newQty, setNewQty] = useState(1); // kept internally for back-compat; UI no longer exposes it
 
   function add() {
     const label = newLabel.trim();
@@ -52,7 +52,7 @@ export default function SettingsForm({
     const r = await fetch("/api/me", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ unitSystem, defaults }),
+      body: JSON.stringify({ unitSystem, defaults: defaults.map((d) => ({ ...d, qty: 1 })) }),
     });
     setSaving(false);
     if (r.ok) setSavedAt(Date.now());
@@ -93,7 +93,7 @@ export default function SettingsForm({
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div>
             <h2 className="text-lg font-semibold">Personal defaults</h2>
-            <p className="text-xs text-slate-400">These items are added to every trip you generate.</p>
+            <p className="text-xs text-slate-400">Concepts always added to your trips. Quantities are calculated per trip based on length and activities (e.g. socks scale with days, ski passes stay at 1).</p>
           </div>
           <div className="flex gap-2">
             <button onClick={loadSeed} className="text-xs px-2 py-1.5 rounded bg-slate-800 hover:bg-slate-700">Load spreadsheet template</button>
@@ -105,14 +105,12 @@ export default function SettingsForm({
         <div className="grid grid-cols-12 gap-2 mb-4">
           <input value={newLabel} onChange={(e) => setNewLabel(e.target.value)}
             placeholder="Item name (e.g. AirPods)"
-            className="col-span-12 sm:col-span-6 bg-slate-900/80 ring-1 ring-slate-700 rounded-lg px-3 py-2 focus:ring-sky-500 focus:outline-none" />
+            className="col-span-12 sm:col-span-7 bg-slate-900/80 ring-1 ring-slate-700 rounded-lg px-3 py-2 focus:ring-sky-500 focus:outline-none" />
           <select value={newCat} onChange={(e) => setNewCat(e.target.value)}
-            className="col-span-7 sm:col-span-3 bg-slate-900/80 ring-1 ring-slate-700 rounded-lg px-3 py-2">
+            className="col-span-8 sm:col-span-3 bg-slate-900/80 ring-1 ring-slate-700 rounded-lg px-3 py-2">
             {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
           </select>
-          <input type="number" min={1} value={newQty} onChange={(e) => setNewQty(parseInt(e.target.value, 10) || 1)}
-            className="col-span-3 sm:col-span-1 bg-slate-900/80 ring-1 ring-slate-700 rounded-lg px-3 py-2" />
-          <button onClick={add} className="col-span-2 sm:col-span-2 px-3 py-2 rounded-lg bg-sky-500 text-slate-950 font-semibold hover:bg-sky-400">Add</button>
+          <button onClick={add} className="col-span-4 sm:col-span-2 px-3 py-2 rounded-lg bg-sky-500 text-slate-950 font-semibold hover:bg-sky-400">Add</button>
         </div>
 
         {/* List */}
@@ -132,9 +130,7 @@ export default function SettingsForm({
                         className="bg-slate-900/80 ring-1 ring-slate-800 rounded px-2 py-1 text-sm">
                         {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
                       </select>
-                      <input type="number" min={1} value={d.qty}
-                        onChange={(e) => update(d.itemKey, { qty: Math.max(1, parseInt(e.target.value, 10) || 1) })}
-                        className="w-16 bg-slate-900/80 ring-1 ring-slate-800 rounded px-2 py-1 text-sm" />
+                      <span title="Quantity is calculated per trip" className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">auto qty</span>
                       <button onClick={() => remove(d.itemKey)} className="text-slate-500 hover:text-rose-400 px-2">✕</button>
                     </li>
                   ))}

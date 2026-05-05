@@ -15,21 +15,21 @@ export const SEED_DEFAULTS: DefaultItem[] = [
   { itemKey: "sneakers",     label: "Sneakers / shoes (Zapatillas)",  category: "Footwear",   qty: 1 },
 
   // Clothing — basics
-  { itemKey: "socks",        label: "Socks (Medias)",                 category: "Clothing — Basics", qty: 5 },
-  { itemKey: "underwear",    label: "Underwear (Calzoncillos)",       category: "Clothing — Basics", qty: 5 },
+  { itemKey: "socks",        label: "Socks (Medias)",                 category: "Clothing — Basics", qty: 1 },
+  { itemKey: "underwear",    label: "Underwear (Calzoncillos)",       category: "Clothing — Basics", qty: 1 },
   { itemKey: "pajamas",      label: "Pajamas (Pijama)",               category: "Clothing — Basics", qty: 1 },
 
   // Bottoms
-  { itemKey: "pants",        label: "Pants (Pantalones)",             category: "Clothing — Bottoms", qty: 2 },
+  { itemKey: "pants",        label: "Pants (Pantalones)",             category: "Clothing — Bottoms", qty: 1 },
   { itemKey: "belt",         label: "Belt (Cinturón)",                category: "Clothing — Bottoms", qty: 1 },
   { itemKey: "shorts",       label: "Shorts & swimsuit (Shorts/Traje de baño)", category: "Clothing — Bottoms", qty: 1 },
 
   // Tops & outerwear
-  { itemKey: "tshirts",      label: "T-shirts / button-ups (Remeras/Camisas)", category: "Clothing — Tops", qty: 4 },
+  { itemKey: "tshirts",      label: "T-shirts / button-ups (Remeras/Camisas)", category: "Clothing — Tops", qty: 1 },
   { itemKey: "sweater",      label: "Sweater / hoodie (Sweater/Buzo)", category: "Clothing — Outerwear", qty: 1 },
 
   // Sports
-  { itemKey: "sportsKit",    label: "Sports kit (Remeras + medias + shorts)", category: "Sports", qty: 2 },
+  { itemKey: "sportsKit",    label: "Sports kit (Remeras + medias + shorts)", category: "Sports", qty: 1 },
 
   // Accessories
   { itemKey: "sunglasses",   label: "Sunglasses (Lentes de sol)",     category: "Accessories", qty: 1 },
@@ -79,7 +79,7 @@ export const SEED_DEFAULTS: DefaultItem[] = [
   // are highly trip-dependent (towel = camping/hostel; hand warmers = freezing
   // weather or skiing) so they are now generated conditionally by the rule
   // engine in lib/packing.ts and the AI prompt in lib/ai.ts instead.
-  { itemKey: "plasticBags",  label: "Plastic bags (Bolsas de nylon)", category: "Misc", qty: 3 },
+  { itemKey: "plasticBags",  label: "Plastic bags (Bolsas de nylon)", category: "Misc", qty: 1 },
   { itemKey: "pen",          label: "Pen (Birome)",                   category: "Misc", qty: 1 },
   { itemKey: "boardGames",   label: "Board games",                    category: "Misc", qty: 1 },
   { itemKey: "itBag",        label: "IT bag (Bolsito de IT)",         category: "Misc", qty: 1 },
