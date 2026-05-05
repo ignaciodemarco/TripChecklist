@@ -45,12 +45,12 @@ export default function CompareModal({ tripId, onClose }: { tripId: string; onCl
     <div className="fixed inset-0 z-50 bg-black/70 flex items-start sm:items-center justify-center p-3 sm:p-6 overflow-y-auto" onClick={onClose}>
       <div className="bg-slate-900 ring-1 ring-slate-700 rounded-2xl w-full max-w-5xl my-6" onClick={(e) => e.stopPropagation()}>
         <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
-          <h3 className="text-lg font-bold">Compare: AI vs Formula</h3>
+          <h3 className="text-lg font-bold">Compare: Saved trip vs Formula</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-white text-xl leading-none">×</button>
         </div>
 
         {!data && !error && (
-          <div className="p-8 text-center text-slate-400">Running both generators…</div>
+          <div className="p-8 text-center text-slate-400">Loading…</div>
         )}
         {error && (
           <div className="p-6 text-rose-300">Error: {error}</div>
@@ -61,7 +61,7 @@ export default function CompareModal({ tripId, onClose }: { tripId: string; onCl
             {/* Headline counts */}
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-xl bg-violet-500/10 ring-1 ring-violet-500/40 p-4">
-                <div className="text-xs uppercase tracking-wider text-violet-300">AI</div>
+                <div className="text-xs uppercase tracking-wider text-violet-300">Saved (current trip)</div>
                 <div className="text-3xl font-bold mt-1">{data.ai.summary.totalItems}</div>
                 <div className="text-xs text-slate-400 mt-1">
                   items · total qty {data.ai.summary.totalQty} · {data.ai.durationMs} ms
@@ -83,7 +83,7 @@ export default function CompareModal({ tripId, onClose }: { tripId: string; onCl
             <div className="rounded-xl ring-1 ring-slate-800 overflow-hidden">
               <div className="px-4 py-2 bg-slate-800/60 text-xs uppercase tracking-wider text-slate-400 grid grid-cols-[1fr_auto_auto] gap-4">
                 <span>Category</span>
-                <span className="text-violet-300">AI (items / qty)</span>
+                <span className="text-violet-300">Saved (items / qty)</span>
                 <span className="text-sky-300">Formula (items / qty)</span>
               </div>
               <ul className="divide-y divide-slate-800/70">

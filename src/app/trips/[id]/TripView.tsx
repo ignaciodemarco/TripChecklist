@@ -261,10 +261,10 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
               className="px-3 py-2 rounded-lg bg-violet-700/40 ring-1 ring-violet-500 hover:bg-violet-700/60 text-violet-100 text-sm disabled:opacity-50">
               {aiBusy === "reeval" ? "Re-evaluating…" : "✨ Re-evaluate with AI"}
             </button>
-            <button onClick={() => setComparing(true)} className="px-3 py-2 rounded-lg bg-amber-700/30 ring-1 ring-amber-500 hover:bg-amber-700/50 text-amber-100 text-sm">⚖️ Compare AI vs Formula</button>
+            <button onClick={() => setComparing(true)} className="px-3 py-2 rounded-lg bg-amber-700/30 ring-1 ring-amber-500 hover:bg-amber-700/50 text-amber-100 text-sm">⚖️ Compare Saved vs Formula</button>
             <button onClick={toggleCompareInline} disabled={compareLoading}
               className={`px-3 py-2 rounded-lg ring-1 text-sm disabled:opacity-50 ${compareInline ? "bg-amber-600/40 ring-amber-400 text-amber-50" : "bg-amber-700/20 ring-amber-600 hover:bg-amber-700/40 text-amber-200"}`}>
-              {compareLoading ? "Loading…" : compareInline ? "Hide inline counts" : "🔢 Show AI/Formula counts"}
+              {compareLoading ? "Loading…" : compareInline ? "Hide inline counts" : "🔢 Show Saved/Formula counts"}
             </button>
             <button onClick={deleteTrip} className="px-3 py-2 rounded-lg bg-rose-900/40 ring-1 ring-rose-700 hover:bg-rose-900/60 text-rose-200 text-sm">Delete trip</button>
           </div>
@@ -349,14 +349,9 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
                       {compareInline && (() => {
                         const c = compareQtys(it);
                         return (
-                          <>
-                            <span title="AI suggestion" className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded ${c.ai != null ? "bg-violet-500/20 text-violet-200" : "bg-slate-800 text-slate-500"}`}>
-                              AI {c.ai != null ? `×${c.ai}` : "—"}
-                            </span>
-                            <span title="Formula suggestion" className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded ${c.formula != null ? "bg-sky-500/20 text-sky-200" : "bg-slate-800 text-slate-500"}`}>
-                              F {c.formula != null ? `×${c.formula}` : "—"}
-                            </span>
-                          </>
+                          <span title="Formula suggestion" className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded ${c.formula != null ? "bg-sky-500/20 text-sky-200" : "bg-slate-800 text-slate-500"}`}>
+                            Formula {c.formula != null ? `×${c.formula}` : "—"}
+                          </span>
                         );
                       })()}
                       {it.source === "user-default" && (
@@ -381,10 +376,10 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
       {compareInline && compareData && (compareData.aiOnly.length > 0 || compareData.formulaOnly.length > 0) && (
         <section className="glass rounded-2xl p-5 ring-1 ring-amber-500/20 no-print">
           <h3 className="font-semibold text-amber-200">Items not in this trip</h3>
-          <p className="text-xs text-slate-400 mt-1">Suggested by AI or Formula but not currently in your list.</p>
+          <p className="text-xs text-slate-400 mt-1">Suggested by the formula but not currently in your saved list.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
             <div>
-              <div className="text-xs uppercase tracking-wider text-violet-300 mb-1">AI only ({compareData.aiOnly.length})</div>
+              <div className="text-xs uppercase tracking-wider text-violet-300 mb-1">Saved only ({compareData.aiOnly.length})</div>
               <ul className="text-sm space-y-1">
                 {compareData.aiOnly.map((it) => (
                   <li key={it.itemKey + it.label} className="flex justify-between gap-2">
