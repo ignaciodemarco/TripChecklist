@@ -3,9 +3,11 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { fetchForecast } from "@/lib/weather";
 import { buildPackingList } from "@/lib/packing";
+import { withApiLog } from "@/lib/api-log";
+import { log } from "@/lib/logger";
 import type { DefaultItem, UnitSystem } from "@/lib/types";
 
-export async function GET() {
+export const GET = withApiLog("trips.list", async () => {
   const session = await auth();
   const userId = (session?.user as any)?.id;
   if (!userId) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -15,9 +17,9 @@ export async function GET() {
     include: { items: true },
   });
   return NextResponse.json(trips.map(serializeTrip));
-}
+});
 
-export async function POST(req: Request) {
+export const POST = withApiLog("trips.create", async (req: Request) => {
   const session = await auth();
   const userId = (session?.user as any)?.id;
   if (!userId) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -37,7 +39,9 @@ export async function POST(req: Request) {
   let weather = null;
   try {
     weather = await fetchForecast(lat, lon, startDate, endDate, unitSystem);
-  } catch { /* non-fatal */ }
+  } catch (err: any) {
+    log.warn("weather.fetch_failed", { userId, lat, lon, startDate, endDate, error: err?.message });
+  }
 
   const tripInput = {
     city, cityFull, lat, lon, startDate, endDate,
@@ -69,8 +73,9 @@ export async function POST(req: Request) {
     },
     include: { items: true },
   });
+  log.info("trip.created", { userId, tripId: trip.id, city: trip.city, days: items.length, itemsGenerated: items.length });
   return NextResponse.json(serializeTrip(trip));
-}
+});
 
 function safeParse<T>(s: string | null | undefined, fallback: T): T {
   try { return s ? JSON.parse(s) : fallback; } catch { return fallback; }

@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { withApiLog } from "@/lib/api-log";
 import type { DefaultItem, UnitSystem } from "@/lib/types";
 
-export async function GET() {
+export const GET = withApiLog("me.get", async () => {
   const session = await auth();
   const userId = (session?.user as any)?.id;
   if (!userId) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -14,9 +15,9 @@ export async function GET() {
     unitSystem: (u.unitSystem as UnitSystem) || "imperial",
     defaults: safeParse<DefaultItem[]>(u.defaults, []),
   });
-}
+});
 
-export async function PATCH(req: Request) {
+export const PATCH = withApiLog("me.patch", async (req: Request) => {
   const session = await auth();
   const userId = (session?.user as any)?.id;
   if (!userId) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -37,7 +38,7 @@ export async function PATCH(req: Request) {
   }
   await prisma.user.update({ where: { id: userId }, data });
   return NextResponse.json({ ok: true });
-}
+});
 
 function safeParse<T>(s: string | null | undefined, fallback: T): T {
   try { return s ? JSON.parse(s) : fallback; } catch { return fallback; }

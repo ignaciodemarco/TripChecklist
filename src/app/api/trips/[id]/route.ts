@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { serializeTrip } from "../route";
 import { fetchForecast } from "@/lib/weather";
 import { buildPackingList } from "@/lib/packing";
+import { withApiLog } from "@/lib/api-log";
+import { log } from "@/lib/logger";
 import type { DefaultItem, UnitSystem } from "@/lib/types";
 
 async function ownTrip(id: string) {
@@ -14,20 +16,21 @@ async function ownTrip(id: string) {
   return { trip, userId };
 }
 
-export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
+export const GET = withApiLog("trip.get", async (_req: Request, ctx: { params: Promise<{ id: string }> }) => {
   const { id } = await ctx.params;
   const { trip } = await ownTrip(id);
   if (!trip) return NextResponse.json({ error: "not found" }, { status: 404 });
   return NextResponse.json(serializeTrip(trip));
-}
+});
 
-export async function DELETE(_req: Request, ctx: { params: Promise<{ id: string }> }) {
+export const DELETE = withApiLog("trip.delete", async (_req: Request, ctx: { params: Promise<{ id: string }> }) => {
   const { id } = await ctx.params;
-  const { trip } = await ownTrip(id);
+  const { trip, userId } = await ownTrip(id);
   if (!trip) return NextResponse.json({ error: "not found" }, { status: 404 });
   await prisma.trip.delete({ where: { id } });
+  log.info("trip.deleted", { userId, tripId: id });
   return NextResponse.json({ ok: true });
-}
+});
 
 function safeParse<T>(s: string | null | undefined, fallback: T): T {
   try { return s ? JSON.parse(s) : fallback; } catch { return fallback; }
@@ -38,7 +41,7 @@ function safeParse<T>(s: string | null | undefined, fallback: T): T {
 // re-fetch weather and rebuild the rule-generated items.
 // Manual items (source="manual") are preserved untouched.
 // Rule items keep their `checked` state when their itemKey still exists.
-export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
+export const PATCH = withApiLog("trip.patch", async (req: Request, ctx: { params: Promise<{ id: string }> }) => {
   const { id } = await ctx.params;
   const { trip, userId } = await ownTrip(id);
   if (!trip || !userId) return NextResponse.json({ error: "not found" }, { status: 404 });
@@ -116,6 +119,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
         })),
       });
     } catch (err: any) {
+      log.error("trip.rebuild_failed", { userId, tripId: id, error: err?.message, stack: err?.stack });
       return NextResponse.json({ error: "rebuild_failed", message: err?.message }, { status: 500 });
     }
   }
@@ -139,5 +143,6 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
   });
 
   const fresh = await prisma.trip.findUnique({ where: { id }, include: { items: true } });
+  log.info("trip.patched", { userId, tripId: id, packingAffected, fields: Object.keys(body) });
   return NextResponse.json(serializeTrip(fresh));
-}
+});

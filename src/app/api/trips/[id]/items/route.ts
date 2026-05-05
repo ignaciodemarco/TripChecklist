@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { aiSuggestForItem, aiReevaluateAll, buildAiContextFromTrip } from "@/lib/ai";
+import { withApiLog } from "@/lib/api-log";
+import { log } from "@/lib/logger";
 
 // Toggle a single item's checked state, or add a manual item, or delete one.
 // Body shapes:
@@ -10,7 +12,7 @@ import { aiSuggestForItem, aiReevaluateAll, buildAiContextFromTrip } from "@/lib
 //   { op: "delete", itemId }
 //   { op: "update", itemId, qty?, label? }
 //   { op: "ai-reevaluate" }
-export async function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
+export const POST = withApiLog("trip.items", async (req: Request, ctx: { params: Promise<{ id: string }> }) => {
   const { id } = await ctx.params;
   const session = await auth();
   const userId = (session?.user as any)?.id;
@@ -38,6 +40,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
       try {
         suggestion = await aiSuggestForItem(label, buildAiContextFromTrip(trip, unitSystem));
       } catch (err: any) {
+        log.error("ai.suggest_failed", { userId, tripId: id, label, error: err?.message, stack: err?.stack });
         return NextResponse.json(
           { error: "ai_failed", message: err?.message || "AI suggestion failed" },
           { status: 502 }
@@ -70,6 +73,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
           buildAiContextFromTrip(trip, unitSystem)
         );
       } catch (err: any) {
+        log.error("ai.reevaluate_failed", { userId, tripId: id, itemCount: items.length, error: err?.message, stack: err?.stack });
         return NextResponse.json(
           { error: "ai_failed", message: err?.message || "AI re-evaluation failed" },
           { status: 502 }
@@ -109,4 +113,4 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
       return NextResponse.json({ error: "unknown op" }, { status: 400 });
   }
   return NextResponse.json({ ok: true });
-}
+});

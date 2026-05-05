@@ -12,6 +12,13 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+# Build-time metadata (passed in via --build-arg from CI). Surfaced at runtime
+# through src/lib/version.ts and the /api/health endpoint so we can tell which
+# commit is actually running in production.
+ARG BUILD_SHA=dev
+ARG BUILD_TIME=unknown
+ENV BUILD_SHA=$BUILD_SHA
+ENV BUILD_TIME=$BUILD_TIME
 RUN npx prisma generate
 RUN npx next build
 
@@ -20,6 +27,10 @@ ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 ENV PORT=8080
 ENV NEXT_TELEMETRY_DISABLED=1
+ARG BUILD_SHA=dev
+ARG BUILD_TIME=unknown
+ENV BUILD_SHA=$BUILD_SHA
+ENV BUILD_TIME=$BUILD_TIME
 
 COPY --from=builder /app ./
 
