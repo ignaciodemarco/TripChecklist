@@ -69,12 +69,15 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
       }
       const tripKeys = new Set(items.map((i) => i.itemKey));
       const tripLabels = new Set(items.map((i) => normLabel(i.label)));
-      const aiOnly = (d.ai.items || []).filter((it: any) =>
-        !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
-      );
-      const formulaOnly = (d.formula.items || []).filter((it: any) =>
-        !tripKeys.has(it.itemKey) && !tripLabels.has(normLabel(it.label))
-      );
+      const tripTokens = items.map((i) => labelTokens(i.label));
+      const isAlreadySaved = (it: { itemKey: string; label: string }) => {
+        if (tripKeys.has(it.itemKey)) return true;
+        if (tripLabels.has(normLabel(it.label))) return true;
+        const tks = labelTokens(it.label);
+        return tripTokens.some((t) => tokensOverlap(t, tks));
+      };
+      const aiOnly = (d.ai.items || []).filter((it: any) => !isAlreadySaved(it));
+      const formulaOnly = (d.formula.items || []).filter((it: any) => !isAlreadySaved(it));
       setCompareData({ aiByKey, formulaByKey, aiByLabel, formulaByLabel, aiOnly, formulaOnly });
     } catch (err) {
       reportClientError("trip.compare_failed", { tripId: trip.id, ...errToFields(err) });
@@ -556,6 +559,26 @@ export default function TripView({ trip, unitLabels: lbl, userDefaults = [] }: P
 
 function normLabel(s: string): string {
   return s.toLowerCase().replace(/\([^)]*\)/g, "").replace(/[^a-z0-9]+/g, "").trim();
+}
+
+// Returns the set of normalized tokens in a label, splitting on slashes and
+// commas so "T-Shirts" and "T-shirts / shirts" both yield "tshirts" as a
+// token. Used for fuzzy duplicate detection in the compare panel: if any
+// token from the suggested label matches any token from a saved label, we
+// treat them as the same item and hide the suggestion.
+function labelTokens(s: string): Set<string> {
+  const stripped = s.toLowerCase().replace(/\([^)]*\)/g, " ");
+  const parts = stripped.split(/[\/,]+/);
+  const out = new Set<string>();
+  for (const p of parts) {
+    const t = p.replace(/[^a-z0-9]+/g, "").trim();
+    if (t.length >= 3) out.add(t);
+  }
+  return out;
+}
+function tokensOverlap(a: Set<string>, b: Set<string>): boolean {
+  for (const t of a) if (b.has(t)) return true;
+  return false;
 }
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
