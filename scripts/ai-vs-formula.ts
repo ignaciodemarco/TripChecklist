@@ -50,6 +50,10 @@ const SCENARIOS: Scenario[] = [
     trip: { city: "Various", cityFull: "Various, USA", lat: 0, lon: 0,
       ...dr("2026-08-01", 10), tripType: "leisure", travelers: 2, laundry: true, international: false, activities: ["hike"] },
     weather: null },
+  { name: "Istanbul summer (13d, mild-hot, 1pax) — should NOT include hand warmers",
+    trip: { city: "Istanbul", cityFull: "Istanbul, Türkiye", lat: 41.01, lon: 28.98,
+      ...dr("2026-05-07", 13), tripType: "leisure", travelers: 1, laundry: false, international: true, activities: [] },
+    weather: mkWeather(11, 30, 33) },
 ];
 
 function summarize(items: PackingItem[]) {

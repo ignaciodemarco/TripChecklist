@@ -18,8 +18,9 @@ export type AiTripContext = {
   unitSystem: "imperial" | "metric";
   weather?: {
     minC?: number; maxC?: number;
-    rainProb?: number; snowProb?: number;
-    minLabel?: string; maxLabel?: string; // already-formatted with units
+    rainProb?: number;
+    /** Total accumulated snow over the trip, in cm. >0 implies snow on at least one day. */
+    totalSnowCm?: number;
   } | null;
 };
 
@@ -65,9 +66,14 @@ function tripContextLine(ctx: AiTripContext): string {
   else parts.push("Activities: none specified");
   if (ctx.weather) {
     const w = ctx.weather;
-    const range = (w.minLabel && w.maxLabel) ? `${w.minLabel} to ${w.maxLabel}` :
-      (w.minC != null && w.maxC != null ? `${Math.round(w.minC)}°C to ${Math.round(w.maxC)}°C` : "unknown");
-    parts.push(`Weather: ${range}, rain prob ${Math.round(w.rainProb ?? 0)}%, snow prob ${Math.round(w.snowProb ?? 0)}%`);
+    // ALWAYS send Celsius to the AI regardless of user's display preference,
+    // because the prompt's weather rules are written in Celsius. Sending
+    // Fahrenheit labels caused the AI to misread "51°" as Celsius and
+    // over-pack winter gear (e.g. hand warmers for an Istanbul summer trip).
+    const range = (w.minC != null && w.maxC != null)
+      ? `${Math.round(w.minC)}°C to ${Math.round(w.maxC)}°C`
+      : "unknown";
+    parts.push(`Weather: ${range}, rain prob ${Math.round(w.rainProb ?? 0)}%, total snow ${(w.totalSnowCm ?? 0).toFixed(1)} cm`);
   } else {
     parts.push("Weather: unknown");
   }
@@ -180,9 +186,11 @@ export function buildAiContextFromTrip(trip: any, unitSystem: "imperial" | "metr
     const w = trip.weather ? JSON.parse(trip.weather) : null;
     if (w) weather = {
       minC: w.minC, maxC: w.maxC,
-      rainProb: w.rainProb, snowProb: w.snowProb,
-      minLabel: w.min != null ? `${Math.round(w.min)}°` : undefined,
-      maxLabel: w.max != null ? `${Math.round(w.max)}°` : undefined,
+      rainProb: w.rainProb,
+      // Convert totalSnow (in user units: mm or inch) to cm for the prompt.
+      totalSnowCm: w.totalSnow != null
+        ? (unitSystem === "imperial" ? w.totalSnow * 2.54 : w.totalSnow / 10)
+        : 0,
     };
   } catch { /* ignore */ }
   return {
@@ -275,7 +283,7 @@ WEATHER ADD-ONS (use the provided min/max in Celsius):
   maxC > 22: shorts, t-shirts, sun hat, sunglasses, sunscreen
   maxC > 30: light/breathable fabrics only, extra hydration, sunscreen
   rainProb > 40%: rain jacket / shell, compact umbrella
-  snowProb > 20% OR activities include ski/snowboard: full snow gear (see below)
+  totalSnowCm > 1 OR activities include ski/snowboard: full snow gear (see below)
 
 ═══════════════════════════════════════════════════════════════
 ACTIVITY ADD-ONS (these are NON-NEGOTIABLE — include every listed item):

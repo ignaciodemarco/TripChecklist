@@ -2,10 +2,10 @@
   {
     "name": "Weekend Paris (3d, mild, 1pax)",
     "ai": {
-      "ms": 22335,
+      "ms": 28506,
       "summary": {
         "totalItems": 32,
-        "totalQty": 40,
+        "totalQty": 41,
         "byCat": {
           "Clothing — Basics": {
             "count": 2,
@@ -17,7 +17,7 @@
           },
           "Clothing — Bottoms": {
             "count": 1,
-            "qty": 2
+            "qty": 3
           },
           "Clothing — Outerwear": {
             "count": 1,
@@ -84,7 +84,7 @@
           "itemKey": "pants",
           "label": "Pants",
           "category": "Clothing — Bottoms",
-          "qty": 2,
+          "qty": 3,
           "reasons": [
             "3 days, no laundry"
           ],
@@ -96,13 +96,13 @@
           "category": "Clothing — Outerwear",
           "qty": 1,
           "reasons": [
-            "Weather 14° to 22°, light layer needed"
+            "Weather 14°C to 22°C"
           ],
           "source": "rule"
         },
         {
           "itemKey": "walkingShoes",
-          "label": "Walking Shoes",
+          "label": "Walking Shoes / Sneakers",
           "category": "Footwear",
           "qty": 1,
           "reasons": [
@@ -116,7 +116,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal hygiene item"
+            "Individually used item"
           ],
           "source": "rule"
         },
@@ -126,7 +126,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal hygiene item"
+            "Shared item"
           ],
           "source": "rule"
         },
@@ -136,7 +136,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal hygiene item"
+            "Individually used item"
           ],
           "source": "rule"
         },
@@ -146,17 +146,17 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal hygiene item"
+            "Shared item"
           ],
           "source": "rule"
         },
         {
           "itemKey": "bodyWash",
-          "label": "Body Wash/Soap",
+          "label": "Body Wash / Soap",
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal hygiene item"
+            "Shared item"
           ],
           "source": "rule"
         },
@@ -166,7 +166,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal care item"
+            "Individually used item"
           ],
           "source": "rule"
         },
@@ -176,17 +176,17 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal hygiene item"
+            "Individually used item"
           ],
           "source": "rule"
         },
         {
           "itemKey": "combBrush",
-          "label": "Comb/Brush",
+          "label": "Comb / Brush",
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal grooming item"
+            "Individually used item"
           ],
           "source": "rule"
         },
@@ -196,7 +196,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Personal grooming item"
+            "Individually used item"
           ],
           "source": "rule"
         },
@@ -206,13 +206,13 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Weather protection"
+            "Weather 14°C to 22°C"
           ],
           "source": "rule"
         },
         {
           "itemKey": "aspirin",
-          "label": "Aspirin/Ibuprofen",
+          "label": "Aspirin / Ibuprofen",
           "category": "Health",
           "qty": 1,
           "reasons": [
@@ -226,7 +226,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "Basic first aid item"
+            "Basic first aid"
           ],
           "source": "rule"
         },
@@ -236,7 +236,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "International trip health precaution"
+            "International trip"
           ],
           "source": "rule"
         },
@@ -246,17 +246,17 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "International trip health precaution"
+            "International trip"
           ],
           "source": "rule"
         },
         {
           "itemKey": "id",
-          "label": "ID/Driver License",
+          "label": "ID / Driver License",
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "Required for identification"
+            "Required for travel"
           ],
           "source": "rule"
         },
@@ -266,7 +266,7 @@
           "category": "Documents",
           "qty": 2,
           "reasons": [
-            "For payments"
+            "For expenses"
           ],
           "source": "rule"
         },
@@ -276,7 +276,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "For small purchases"
+            "For expenses"
           ],
           "source": "rule"
         },
@@ -286,7 +286,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "Required for international travel"
+            "International trip"
           ],
           "source": "rule"
         },
@@ -296,7 +296,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "International trip requirement"
+            "International trip"
           ],
           "source": "rule"
         },
@@ -306,7 +306,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "For health emergencies"
+            "For emergencies"
           ],
           "source": "rule"
         },
@@ -316,7 +316,7 @@
           "category": "Electronics",
           "qty": 1,
           "reasons": [
-            "Essential for device charging"
+            "Individually used item"
           ],
           "source": "rule"
         },
@@ -326,7 +326,7 @@
           "category": "Electronics",
           "qty": 1,
           "reasons": [
-            "For entertainment"
+            "Individually used item"
           ],
           "source": "rule"
         },
@@ -352,7 +352,7 @@
         },
         {
           "itemKey": "eyeMask",
-          "label": "Sleep/Eye Mask",
+          "label": "Sleep / Eye Mask",
           "category": "Misc",
           "qty": 1,
           "reasons": [
@@ -366,7 +366,7 @@
           "category": "Misc",
           "qty": 1,
           "reasons": [
-            "To keep dirty clothes separate"
+            "For dirty clothes"
           ],
           "source": "rule"
         }
@@ -764,34 +764,34 @@
   {
     "name": "Family beach Cancun (7d, hot, 4pax, laundry)",
     "ai": {
-      "ms": 26487,
+      "ms": 29526,
       "summary": {
-        "totalItems": 40,
-        "totalQty": 135,
+        "totalItems": 37,
+        "totalQty": 143,
         "byCat": {
           "Clothing — Basics": {
-            "count": 3,
-            "qty": 36
+            "count": 4,
+            "qty": 48
           },
           "Clothing — Tops": {
             "count": 1,
             "qty": 10
           },
           "Clothing — Bottoms": {
-            "count": 2,
-            "qty": 6
-          },
-          "Misc": {
-            "count": 4,
-            "qty": 10
+            "count": 1,
+            "qty": 4
           },
           "Footwear": {
             "count": 2,
             "qty": 8
           },
+          "Misc": {
+            "count": 4,
+            "qty": 10
+          },
           "Accessories": {
-            "count": 3,
-            "qty": 9
+            "count": 1,
+            "qty": 1
           },
           "Toiletries": {
             "count": 10,
@@ -803,11 +803,11 @@
           },
           "Documents": {
             "count": 6,
-            "qty": 15
+            "qty": 22
           },
           "Electronics": {
-            "count": 5,
-            "qty": 15
+            "count": 4,
+            "qty": 14
           }
         }
       },
@@ -853,42 +853,22 @@
           "source": "rule"
         },
         {
-          "itemKey": "pants",
-          "label": "Pants",
-          "category": "Clothing — Bottoms",
-          "qty": 2,
-          "reasons": [
-            "7 days, laundry → 4/person × 4 travelers, max 4"
-          ],
-          "source": "rule"
-        },
-        {
           "itemKey": "swimwear",
           "label": "Swimwear",
           "category": "Clothing — Basics",
           "qty": 4,
           "reasons": [
-            "1 per traveler for beach activities"
+            "beach / swim activities, 1 per person"
           ],
           "source": "rule"
         },
         {
-          "itemKey": "beachTowel",
-          "label": "Beach Towel",
-          "category": "Misc",
-          "qty": 4,
+          "itemKey": "sleepwear",
+          "label": "Sleepwear",
+          "category": "Clothing — Basics",
+          "qty": 12,
           "reasons": [
-            "1 per traveler for beach activities"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "flipFlops",
-          "label": "Flip-Flops",
-          "category": "Footwear",
-          "qty": 4,
-          "reasons": [
-            "1 pair per traveler for beach activities"
+            "7 days, laundry → 4/person × 4 travelers, max 3"
           ],
           "source": "rule"
         },
@@ -898,7 +878,27 @@
           "category": "Footwear",
           "qty": 4,
           "reasons": [
-            "1 pair per traveler for general use"
+            "1 pair per person"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "flipFlops",
+          "label": "Flip-Flops",
+          "category": "Footwear",
+          "qty": 4,
+          "reasons": [
+            "beach activities, 1 pair per person"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "beachTowel",
+          "label": "Beach Towel",
+          "category": "Misc",
+          "qty": 4,
+          "reasons": [
+            "beach activities, 1 per person"
           ],
           "source": "rule"
         },
@@ -908,27 +908,7 @@
           "category": "Accessories",
           "qty": 1,
           "reasons": [
-            "Shared item for sun protection"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "sunHat",
-          "label": "Sun Hat",
-          "category": "Accessories",
-          "qty": 4,
-          "reasons": [
-            "1 per traveler for sun protection"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "sunglasses",
-          "label": "Sunglasses",
-          "category": "Accessories",
-          "qty": 4,
-          "reasons": [
-            "1 per traveler for sun protection"
+            "shared item for sun protection"
           ],
           "source": "rule"
         },
@@ -938,7 +918,7 @@
           "category": "Toiletries",
           "qty": 4,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -948,7 +928,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Shared item"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -958,7 +938,7 @@
           "category": "Toiletries",
           "qty": 4,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -968,7 +948,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Shared item"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -978,7 +958,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Shared item"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -988,7 +968,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Shared item"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -998,7 +978,7 @@
           "category": "Toiletries",
           "qty": 4,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -1008,7 +988,7 @@
           "category": "Toiletries",
           "qty": 4,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -1018,7 +998,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Shared item"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -1028,7 +1008,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Shared item for sun protection"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -1038,7 +1018,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "Shared item for health"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -1048,7 +1028,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "Shared item for health"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -1058,7 +1038,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "International trip health precaution"
+            "international trip"
           ],
           "source": "rule"
         },
@@ -1068,17 +1048,17 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "International trip health precaution"
+            "international trip"
           ],
           "source": "rule"
         },
         {
           "itemKey": "id",
-          "label": "ID / Driver License",
+          "label": "ID/Driver License",
           "category": "Documents",
           "qty": 4,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -1086,9 +1066,9 @@
           "itemKey": "cards",
           "label": "Credit Cards",
           "category": "Documents",
-          "qty": 4,
+          "qty": 8,
           "reasons": [
-            "1-2 per traveler"
+            "2 per person"
           ],
           "source": "rule"
         },
@@ -1096,9 +1076,9 @@
           "itemKey": "cash",
           "label": "Cash",
           "category": "Documents",
-          "qty": 1,
+          "qty": 4,
           "reasons": [
-            "1 wallet for shared expenses"
+            "1 wallet of cash per person"
           ],
           "source": "rule"
         },
@@ -1108,7 +1088,7 @@
           "category": "Documents",
           "qty": 4,
           "reasons": [
-            "1 per traveler for international travel"
+            "international trip, 1 per person"
           ],
           "source": "rule"
         },
@@ -1118,7 +1098,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "Shared item for charging devices"
+            "shared item for international travel"
           ],
           "source": "rule"
         },
@@ -1128,7 +1108,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "Shared item for health coverage"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -1138,7 +1118,7 @@
           "category": "Electronics",
           "qty": 4,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -1148,7 +1128,7 @@
           "category": "Electronics",
           "qty": 4,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -1158,7 +1138,7 @@
           "category": "Electronics",
           "qty": 2,
           "reasons": [
-            "1 per 2 travelers"
+            "1 per 2 travelers, min 1"
           ],
           "source": "rule"
         },
@@ -1168,17 +1148,7 @@
           "category": "Electronics",
           "qty": 4,
           "reasons": [
-            "1 per traveler for hydration"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "daypack",
-          "label": "Daypack",
-          "category": "Electronics",
-          "qty": 1,
-          "reasons": [
-            "Shared item for carrying essentials"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -1188,7 +1158,7 @@
           "category": "Misc",
           "qty": 1,
           "reasons": [
-            "Shared item for laundry / wet items"
+            "shared item for laundry/wet items"
           ],
           "source": "rule"
         },
@@ -1198,7 +1168,7 @@
           "category": "Misc",
           "qty": 4,
           "reasons": [
-            "1 per traveler for sleep"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -1208,7 +1178,7 @@
           "category": "Misc",
           "qty": 1,
           "reasons": [
-            "Shared item for dirty clothes"
+            "shared item for laundry"
           ],
           "source": "rule"
         }
@@ -1652,34 +1622,38 @@
   {
     "name": "Solo ski Aspen (5d, freezing, 1pax)",
     "ai": {
-      "ms": 22650,
+      "ms": 35725,
       "summary": {
         "totalItems": 33,
-        "totalQty": 49,
+        "totalQty": 50,
         "byCat": {
           "Clothing — Basics": {
             "count": 3,
             "qty": 13
           },
-          "Clothing — Outerwear": {
-            "count": 3,
-            "qty": 4
+          "Clothing — Tops": {
+            "count": 2,
+            "qty": 5
           },
           "Clothing — Bottoms": {
             "count": 1,
             "qty": 4
           },
-          "Clothing — Tops": {
+          "Footwear": {
             "count": 1,
-            "qty": 2
+            "qty": 1
           },
           "Snow gear": {
-            "count": 5,
-            "qty": 5
+            "count": 6,
+            "qty": 6
+          },
+          "Accessories": {
+            "count": 1,
+            "qty": 1
           },
           "Toiletries": {
-            "count": 10,
-            "qty": 10
+            "count": 9,
+            "qty": 9
           },
           "Health": {
             "count": 2,
@@ -1721,22 +1695,12 @@
           "source": "rule"
         },
         {
-          "itemKey": "sleepwear",
-          "label": "Sleepwear",
-          "category": "Clothing — Basics",
+          "itemKey": "tShirts",
+          "label": "T-Shirts",
+          "category": "Clothing — Tops",
           "qty": 3,
           "reasons": [
-            "5 days, no laundry → max 3"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "thermalBase",
-          "label": "Thermal Base Layer",
-          "category": "Clothing — Outerwear",
-          "qty": 2,
-          "reasons": [
-            "Cold weather, need layers"
+            "5 days, no laundry → 5 days × 0.7"
           ],
           "source": "rule"
         },
@@ -1746,7 +1710,7 @@
           "category": "Clothing — Bottoms",
           "qty": 4,
           "reasons": [
-            "5 days, no laundry → max 4"
+            "5 days, no laundry → 5 days × 0.3"
           ],
           "source": "rule"
         },
@@ -1756,27 +1720,27 @@
           "category": "Clothing — Tops",
           "qty": 2,
           "reasons": [
-            "Cold weather, need layers"
+            "5 days, no laundry → 5 days × 0.2"
           ],
           "source": "rule"
         },
         {
-          "itemKey": "skiJacket",
-          "label": "Ski Jacket",
-          "category": "Snow gear",
-          "qty": 1,
+          "itemKey": "sleepwear",
+          "label": "Sleepwear",
+          "category": "Clothing — Basics",
+          "qty": 3,
           "reasons": [
-            "Ski trip, essential outerwear"
+            "5 days, no laundry → 5 days × 0.5"
           ],
           "source": "rule"
         },
         {
-          "itemKey": "skiPants",
-          "label": "Ski Pants",
-          "category": "Snow gear",
+          "itemKey": "sneakers",
+          "label": "Walking Shoes / Sneakers",
+          "category": "Footwear",
           "qty": 1,
           "reasons": [
-            "Ski trip, essential outerwear"
+            "1 pair needed for walking"
           ],
           "source": "rule"
         },
@@ -1786,7 +1750,37 @@
           "category": "Snow gear",
           "qty": 1,
           "reasons": [
-            "Ski trip, essential footwear"
+            "Ski trip, needed for snow"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "skiJacket",
+          "label": "Ski Jacket",
+          "category": "Snow gear",
+          "qty": 1,
+          "reasons": [
+            "Ski trip, needed for cold weather"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "skiPants",
+          "label": "Ski Pants",
+          "category": "Snow gear",
+          "qty": 1,
+          "reasons": [
+            "Ski trip, needed for cold weather"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "thermalBase",
+          "label": "Thermal Base Layer",
+          "category": "Snow gear",
+          "qty": 1,
+          "reasons": [
+            "Ski trip, needed for warmth"
           ],
           "source": "rule"
         },
@@ -1796,7 +1790,7 @@
           "category": "Snow gear",
           "qty": 1,
           "reasons": [
-            "Ski trip, essential gear"
+            "Ski trip, needed for visibility"
           ],
           "source": "rule"
         },
@@ -1806,27 +1800,17 @@
           "category": "Snow gear",
           "qty": 1,
           "reasons": [
-            "Ski trip, essential gear"
+            "Ski trip, needed for warmth"
           ],
           "source": "rule"
         },
         {
-          "itemKey": "scarf",
-          "label": "Scarf",
-          "category": "Clothing — Outerwear",
+          "itemKey": "lipBalm",
+          "label": "Lip Balm",
+          "category": "Accessories",
           "qty": 1,
           "reasons": [
-            "Cold weather, need warmth"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "beanie",
-          "label": "Warm Hat (Beanie)",
-          "category": "Clothing — Outerwear",
-          "qty": 1,
-          "reasons": [
-            "Cold weather, need warmth"
+            "Cold weather protection"
           ],
           "source": "rule"
         },
@@ -1872,7 +1856,7 @@
         },
         {
           "itemKey": "bodyWash",
-          "label": "Body Wash/Soap",
+          "label": "Body Wash / Soap",
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
@@ -1886,7 +1870,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "Cold weather, skin care"
+            "Cold weather skin care"
           ],
           "source": "rule"
         },
@@ -1902,7 +1886,7 @@
         },
         {
           "itemKey": "combBrush",
-          "label": "Comb/Brush",
+          "label": "Comb / Brush",
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
@@ -1921,18 +1905,8 @@
           "source": "rule"
         },
         {
-          "itemKey": "lipBalm",
-          "label": "Lip Balm",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Cold weather, lip care"
-          ],
-          "source": "rule"
-        },
-        {
           "itemKey": "aspirin",
-          "label": "Aspirin/Ibuprofen",
+          "label": "Aspirin / Ibuprofen",
           "category": "Health",
           "qty": 1,
           "reasons": [
@@ -1952,11 +1926,11 @@
         },
         {
           "itemKey": "id",
-          "label": "ID/Driver License",
+          "label": "ID / Driver License",
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "Required for travel"
+            "Required for identification"
           ],
           "source": "rule"
         },
@@ -1966,7 +1940,7 @@
           "category": "Documents",
           "qty": 2,
           "reasons": [
-            "Payment methods"
+            "For expenses"
           ],
           "source": "rule"
         },
@@ -1976,7 +1950,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "Payment method"
+            "For expenses"
           ],
           "source": "rule"
         },
@@ -1986,7 +1960,7 @@
           "category": "Electronics",
           "qty": 1,
           "reasons": [
-            "Essential for device"
+            "For charging phone"
           ],
           "source": "rule"
         },
@@ -2006,13 +1980,13 @@
           "category": "Misc",
           "qty": 1,
           "reasons": [
-            "For laundry/wet items"
+            "For laundry / wet items"
           ],
           "source": "rule"
         },
         {
           "itemKey": "eyeMask",
-          "label": "Sleep/Eye Mask",
+          "label": "Sleep / Eye Mask",
           "category": "Misc",
           "qty": 1,
           "reasons": [
@@ -2476,14 +2450,14 @@
   {
     "name": "Backpacking Bangkok (21d, hot, 2pax, laundry)",
     "ai": {
-      "ms": 29368,
+      "ms": 34588,
       "summary": {
-        "totalItems": 41,
-        "totalQty": 112,
+        "totalItems": 37,
+        "totalQty": 103,
         "byCat": {
           "Clothing — Basics": {
-            "count": 3,
-            "qty": 43
+            "count": 2,
+            "qty": 40
           },
           "Clothing — Tops": {
             "count": 2,
@@ -2501,17 +2475,9 @@
             "count": 1,
             "qty": 1
           },
-          "Accessories": {
-            "count": 2,
-            "qty": 4
-          },
-          "Misc": {
-            "count": 4,
-            "qty": 5
-          },
           "Toiletries": {
             "count": 10,
-            "qty": 15
+            "qty": 14
           },
           "Health": {
             "count": 4,
@@ -2524,6 +2490,10 @@
           "Electronics": {
             "count": 5,
             "qty": 8
+          },
+          "Misc": {
+            "count": 3,
+            "qty": 4
           }
         }
       },
@@ -2554,7 +2524,7 @@
           "category": "Clothing — Tops",
           "qty": 10,
           "reasons": [
-            "21 days, laundry → 10 days × 0.7"
+            "21 days, laundry → 7/person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -2564,7 +2534,7 @@
           "category": "Clothing — Bottoms",
           "qty": 4,
           "reasons": [
-            "21 days, laundry → 4 days × 0.3"
+            "21 days, laundry → 3/person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -2574,7 +2544,7 @@
           "category": "Clothing — Bottoms",
           "qty": 4,
           "reasons": [
-            "maxC > 22, 21 days, laundry → 4 days × 0.3"
+            "maxC > 22, 21 days, laundry → 3/person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -2584,17 +2554,7 @@
           "category": "Clothing — Tops",
           "qty": 1,
           "reasons": [
-            "minC > 18, no need for sweaters"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "sleepwear",
-          "label": "Sleepwear",
-          "category": "Clothing — Basics",
-          "qty": 3,
-          "reasons": [
-            "21 days, laundry → 10 days × 0.5"
+            "maxC > 22, 21 days, laundry → 1/person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -2604,7 +2564,7 @@
           "category": "Footwear",
           "qty": 3,
           "reasons": [
-            "21 days → 21 days × 0.27 + 1"
+            "21 days, laundry → 3 pairs max/person"
           ],
           "source": "rule"
         },
@@ -2614,7 +2574,7 @@
           "category": "Footwear",
           "qty": 1,
           "reasons": [
-            "Hiking activity planned"
+            "Hiking activity"
           ],
           "source": "rule"
         },
@@ -2629,42 +2589,12 @@
           "source": "rule"
         },
         {
-          "itemKey": "sunHat",
-          "label": "Sun Hat",
-          "category": "Accessories",
-          "qty": 2,
-          "reasons": [
-            "sun protection for 2 travelers"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "sunglasses",
-          "label": "Sunglasses",
-          "category": "Accessories",
-          "qty": 2,
-          "reasons": [
-            "sun protection for 2 travelers"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "sunscreen",
-          "label": "Sunscreen",
-          "category": "Misc",
-          "qty": 1,
-          "reasons": [
-            "sun protection for outdoor activities"
-          ],
-          "source": "rule"
-        },
-        {
           "itemKey": "toothbrush",
           "label": "Toothbrush",
           "category": "Toiletries",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2674,7 +2604,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "shared tube for 2 travelers"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -2684,7 +2614,7 @@
           "category": "Toiletries",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2694,7 +2624,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "shared bottle for 2 travelers"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -2704,7 +2634,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "shared bottle for 2 travelers"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -2714,7 +2644,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "shared bottle for 2 travelers"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -2724,7 +2654,7 @@
           "category": "Toiletries",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2734,7 +2664,7 @@
           "category": "Toiletries",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2744,7 +2674,7 @@
           "category": "Toiletries",
           "qty": 1,
           "reasons": [
-            "shared item for 2 travelers"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -2752,9 +2682,9 @@
           "itemKey": "lipBalm",
           "label": "Lip Balm",
           "category": "Toiletries",
-          "qty": 2,
+          "qty": 1,
           "reasons": [
-            "1 per traveler"
+            "shared item"
           ],
           "source": "rule"
         },
@@ -2764,7 +2694,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "basic health item for any trip"
+            "international trip"
           ],
           "source": "rule"
         },
@@ -2774,7 +2704,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "basic first aid item for any trip"
+            "international trip"
           ],
           "source": "rule"
         },
@@ -2784,7 +2714,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "international trip health precaution"
+            "international trip"
           ],
           "source": "rule"
         },
@@ -2794,7 +2724,7 @@
           "category": "Health",
           "qty": 1,
           "reasons": [
-            "international trip health precaution"
+            "international trip"
           ],
           "source": "rule"
         },
@@ -2804,7 +2734,7 @@
           "category": "Documents",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2814,7 +2744,7 @@
           "category": "Documents",
           "qty": 2,
           "reasons": [
-            "1-2 cards per traveler"
+            "1-2 cards per person"
           ],
           "source": "rule"
         },
@@ -2824,7 +2754,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "1 wallet of cash for both travelers"
+            "1 wallet of cash"
           ],
           "source": "rule"
         },
@@ -2834,7 +2764,7 @@
           "category": "Documents",
           "qty": 2,
           "reasons": [
-            "1 per traveler for international trip"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2844,7 +2774,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "shared item for international trip"
+            "international trip"
           ],
           "source": "rule"
         },
@@ -2854,7 +2784,7 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "shared item for international trip"
+            "international trip"
           ],
           "source": "rule"
         },
@@ -2864,7 +2794,7 @@
           "category": "Electronics",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2874,7 +2804,7 @@
           "category": "Electronics",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2884,7 +2814,7 @@
           "category": "Electronics",
           "qty": 1,
           "reasons": [
-            "1 for 2 travelers"
+            "1 per 2 travelers"
           ],
           "source": "rule"
         },
@@ -2894,7 +2824,7 @@
           "category": "Electronics",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2904,7 +2834,7 @@
           "category": "Electronics",
           "qty": 1,
           "reasons": [
-            "for hiking activities"
+            "for hiking"
           ],
           "source": "rule"
         },
@@ -2924,7 +2854,7 @@
           "category": "Misc",
           "qty": 2,
           "reasons": [
-            "1 per traveler"
+            "1 per person"
           ],
           "source": "rule"
         },
@@ -2934,7 +2864,7 @@
           "category": "Misc",
           "qty": 1,
           "reasons": [
-            "shared item for laundry"
+            "shared item"
           ],
           "source": "rule"
         }
@@ -3382,7 +3312,7 @@
   {
     "name": "Business NYC (4d, cool, 1pax)",
     "ai": {
-      "ms": 25069,
+      "ms": 29540,
       "summary": {
         "totalItems": 31,
         "totalQty": 46,
@@ -3404,8 +3334,12 @@
             "qty": 3
           },
           "Clothing — Formal": {
-            "count": 4,
-            "qty": 7
+            "count": 3,
+            "qty": 6
+          },
+          "Documents": {
+            "count": 3,
+            "qty": 4
           },
           "Toiletries": {
             "count": 10,
@@ -3415,13 +3349,9 @@
             "count": 2,
             "qty": 2
           },
-          "Documents": {
-            "count": 3,
-            "qty": 4
-          },
           "Electronics": {
-            "count": 2,
-            "qty": 2
+            "count": 3,
+            "qty": 3
           },
           "Misc": {
             "count": 3,
@@ -3476,7 +3406,7 @@
           "category": "Clothing — Outerwear",
           "qty": 1,
           "reasons": [
-            "Weather 8° to 16° → 1 max"
+            "Weather 8°C to 16°C, 1 max"
           ],
           "source": "rule"
         },
@@ -3486,7 +3416,7 @@
           "category": "Clothing — Outerwear",
           "qty": 1,
           "reasons": [
-            "Weather 8° to 16° → 1 needed"
+            "Weather 8°C to 16°C, 1 needed"
           ],
           "source": "rule"
         },
@@ -3506,147 +3436,17 @@
           "category": "Clothing — Formal",
           "qty": 3,
           "reasons": [
-            "4 days, 1 per day for business"
+            "Business trip, 3 shirts for 4 days"
           ],
           "source": "rule"
         },
         {
-          "itemKey": "blazer",
-          "label": "Blazer",
-          "category": "Clothing — Formal",
-          "qty": 1,
-          "reasons": [
-            "Business trip requires formal outerwear"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "ties",
-          "label": "Ties",
+          "itemKey": "tie",
+          "label": "Tie",
           "category": "Clothing — Formal",
           "qty": 2,
           "reasons": [
-            "Business trip requires formal accessories"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "toothbrush",
-          "label": "Toothbrush",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "toothpaste",
-          "label": "Toothpaste",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "deodorant",
-          "label": "Deodorant",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "shampoo",
-          "label": "Shampoo",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "bodyWash",
-          "label": "Body Wash/Soap",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "moisturizer",
-          "label": "Moisturizer",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "razor",
-          "label": "Razor",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "combBrush",
-          "label": "Comb/Brush",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "nailClipper",
-          "label": "Nail Clipper",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Individually used toiletries"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "lipBalm",
-          "label": "Lip Balm",
-          "category": "Toiletries",
-          "qty": 1,
-          "reasons": [
-            "Weather 8° to 16° → for dry lips"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "aspirin",
-          "label": "Aspirin/Ibuprofen",
-          "category": "Health",
-          "qty": 1,
-          "reasons": [
-            "Basic health item"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "bandaids",
-          "label": "Band-Aids",
-          "category": "Health",
-          "qty": 1,
-          "reasons": [
-            "Basic first aid"
+            "Business trip, 2 ties for variety"
           ],
           "source": "rule"
         },
@@ -3666,7 +3466,7 @@
           "category": "Documents",
           "qty": 2,
           "reasons": [
-            "For expenses during the trip"
+            "2 cards for expenses"
           ],
           "source": "rule"
         },
@@ -3676,7 +3476,127 @@
           "category": "Documents",
           "qty": 1,
           "reasons": [
-            "For expenses during the trip"
+            "For small purchases"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "toothbrush",
+          "label": "Toothbrush",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal hygiene item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "toothpaste",
+          "label": "Toothpaste",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal hygiene item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "deodorant",
+          "label": "Deodorant",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal hygiene item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "shampoo",
+          "label": "Shampoo",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal hygiene item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "bodyWash",
+          "label": "Body Wash/Soap",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal hygiene item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "moisturizer",
+          "label": "Moisturizer",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal care item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "razor",
+          "label": "Razor",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal grooming item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "combBrush",
+          "label": "Comb/Brush",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal grooming item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "nailClipper",
+          "label": "Nail Clipper",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Personal grooming item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "lipBalm",
+          "label": "Lip Balm",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Weather can be dry"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "aspirin",
+          "label": "Aspirin/Ibuprofen",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [
+            "Basic health item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "bandaids",
+          "label": "Band-Aids",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [
+            "Basic first aid item"
           ],
           "source": "rule"
         },
@@ -3686,7 +3606,7 @@
           "category": "Electronics",
           "qty": 1,
           "reasons": [
-            "For charging phone"
+            "Essential for device charging"
           ],
           "source": "rule"
         },
@@ -3696,7 +3616,17 @@
           "category": "Electronics",
           "qty": 1,
           "reasons": [
-            "For listening to music or calls"
+            "For entertainment and calls"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "powerBank",
+          "label": "Power Bank",
+          "category": "Electronics",
+          "qty": 1,
+          "reasons": [
+            "For charging on the go"
           ],
           "source": "rule"
         },
@@ -3736,7 +3666,7 @@
           "category": "Clothing — Outerwear",
           "qty": 1,
           "reasons": [
-            "Rain prob 40% → for wet weather"
+            "Rain prob 40%, needed for wet weather"
           ],
           "source": "rule"
         }
@@ -4124,14 +4054,14 @@
   {
     "name": "Couple road trip (10d, no weather, 2pax, laundry)",
     "ai": {
-      "ms": 25615,
+      "ms": 27807,
       "summary": {
-        "totalItems": 33,
-        "totalQty": 75,
+        "totalItems": 30,
+        "totalQty": 70,
         "byCat": {
           "Clothing — Basics": {
-            "count": 3,
-            "qty": 23
+            "count": 2,
+            "qty": 20
           },
           "Clothing — Tops": {
             "count": 1,
@@ -4154,20 +4084,20 @@
             "qty": 14
           },
           "Health": {
-            "count": 4,
-            "qty": 4
+            "count": 2,
+            "qty": 2
           },
           "Documents": {
             "count": 3,
             "qty": 5
           },
           "Electronics": {
-            "count": 5,
-            "qty": 8
+            "count": 4,
+            "qty": 7
           },
           "Misc": {
-            "count": 3,
-            "qty": 4
+            "count": 4,
+            "qty": 5
           }
         }
       },
@@ -4198,7 +4128,7 @@
           "category": "Clothing — Tops",
           "qty": 7,
           "reasons": [
-            "10 days, laundry → max(3, ceil(10 / 2)) = 5, capped at 10"
+            "10 days, laundry → 7/person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4208,7 +4138,7 @@
           "category": "Clothing — Bottoms",
           "qty": 4,
           "reasons": [
-            "10 days, laundry → ceil(10 / 2) = 5, capped at 4"
+            "10 days, laundry → 4/person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4218,17 +4148,7 @@
           "category": "Clothing — Outerwear",
           "qty": 2,
           "reasons": [
-            "10 days, laundry → ceil(10 / 5) = 2, capped at 2"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "sleepwear",
-          "label": "Sleepwear",
-          "category": "Clothing — Basics",
-          "qty": 3,
-          "reasons": [
-            "10 days, laundry → ceil(10 / 2) = 5, capped at 3"
+            "10 days, laundry → 2/person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4238,7 +4158,7 @@
           "category": "Footwear",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 pair each"
+            "1 pair per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4248,7 +4168,7 @@
           "category": "Footwear",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 pair each for hiking"
+            "1 pair per person for hiking × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4258,7 +4178,7 @@
           "category": "Toiletries",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4278,7 +4198,7 @@
           "category": "Toiletries",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4318,7 +4238,7 @@
           "category": "Toiletries",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4328,7 +4248,7 @@
           "category": "Toiletries",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4373,32 +4293,12 @@
           "source": "rule"
         },
         {
-          "itemKey": "antibiotic",
-          "label": "Antibiotic (Azithro/Cipro)",
-          "category": "Health",
-          "qty": 1,
-          "reasons": [
-            "1 for all travelers"
-          ],
-          "source": "rule"
-        },
-        {
-          "itemKey": "antiDiarrheal",
-          "label": "Anti-Diarrheal (Pepto/Imodium)",
-          "category": "Health",
-          "qty": 1,
-          "reasons": [
-            "1 for all travelers"
-          ],
-          "source": "rule"
-        },
-        {
           "itemKey": "id",
           "label": "ID / Driver License",
           "category": "Documents",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4408,7 +4308,7 @@
           "category": "Documents",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1-2 each"
+            "1-2 cards per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4428,7 +4328,7 @@
           "category": "Electronics",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4438,7 +4338,7 @@
           "category": "Electronics",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4448,7 +4348,7 @@
           "category": "Electronics",
           "qty": 1,
           "reasons": [
-            "1 for every 2 travelers"
+            "1 for 2 travelers"
           ],
           "source": "rule"
         },
@@ -4458,14 +4358,14 @@
           "category": "Electronics",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
         {
           "itemKey": "daypack",
           "label": "Daypack",
-          "category": "Electronics",
+          "category": "Misc",
           "qty": 1,
           "reasons": [
             "1 for all travelers for hiking"
@@ -4488,7 +4388,7 @@
           "category": "Misc",
           "qty": 2,
           "reasons": [
-            "2 travelers, 1 each"
+            "1 per person × 2 travelers"
           ],
           "source": "rule"
         },
@@ -4803,6 +4703,818 @@
           "label": "Sleep / eye mask",
           "category": "Misc",
           "qty": 2,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "laundryBag",
+          "label": "Laundry bag",
+          "category": "Misc",
+          "qty": 1,
+          "reasons": [
+            "Long trip"
+          ],
+          "source": "rule"
+        }
+      ]
+    }
+  },
+  {
+    "name": "Istanbul summer (13d, mild-hot, 1pax) — should NOT include hand warmers",
+    "ai": {
+      "ms": 27089,
+      "summary": {
+        "totalItems": 33,
+        "totalQty": 65,
+        "byCat": {
+          "Clothing — Basics": {
+            "count": 2,
+            "qty": 20
+          },
+          "Clothing — Tops": {
+            "count": 1,
+            "qty": 9
+          },
+          "Clothing — Bottoms": {
+            "count": 1,
+            "qty": 4
+          },
+          "Clothing — Outerwear": {
+            "count": 2,
+            "qty": 3
+          },
+          "Footwear": {
+            "count": 1,
+            "qty": 2
+          },
+          "Toiletries": {
+            "count": 10,
+            "qty": 10
+          },
+          "Health": {
+            "count": 4,
+            "qty": 4
+          },
+          "Documents": {
+            "count": 6,
+            "qty": 7
+          },
+          "Electronics": {
+            "count": 3,
+            "qty": 3
+          },
+          "Misc": {
+            "count": 3,
+            "qty": 3
+          }
+        }
+      },
+      "items": [
+        {
+          "itemKey": "underwear",
+          "label": "Underwear",
+          "category": "Clothing — Basics",
+          "qty": 10,
+          "reasons": [
+            "no laundry, 13 days → 10 max"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "socks",
+          "label": "Socks",
+          "category": "Clothing — Basics",
+          "qty": 10,
+          "reasons": [
+            "no laundry, 13 days → 10 max"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "tShirts",
+          "label": "T-Shirts",
+          "category": "Clothing — Tops",
+          "qty": 9,
+          "reasons": [
+            "no laundry, 13 days → 9 max"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "pants",
+          "label": "Pants",
+          "category": "Clothing — Bottoms",
+          "qty": 4,
+          "reasons": [
+            "no laundry, 13 days → 4 max"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "sweater",
+          "label": "Sweater",
+          "category": "Clothing — Outerwear",
+          "qty": 2,
+          "reasons": [
+            "minC 11°C, 13 days → 2 max"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "lightJacket",
+          "label": "Light Jacket",
+          "category": "Clothing — Outerwear",
+          "qty": 1,
+          "reasons": [
+            "minC 11°C, needed for cooler evenings"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "sneakers",
+          "label": "Walking Shoes / Sneakers",
+          "category": "Footwear",
+          "qty": 2,
+          "reasons": [
+            "no laundry, 13 days → 2 max"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "toothbrush",
+          "label": "Toothbrush",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "individually used item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "toothpaste",
+          "label": "Toothpaste",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "shared item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "deodorant",
+          "label": "Deodorant",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "individually used item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "shampoo",
+          "label": "Shampoo",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "shared item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "bodyWash",
+          "label": "Body Wash / Soap",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "shared item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "moisturizer",
+          "label": "Moisturizer",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "shared item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "razor",
+          "label": "Razor",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "individually used item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "combBrush",
+          "label": "Comb / Brush",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "individually used item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "nailClipper",
+          "label": "Nail Clipper",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "individually used item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "lipBalm",
+          "label": "Lip Balm",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "needed for dry weather"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "aspirin",
+          "label": "Aspirin / Ibuprofen",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [
+            "basic health item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "bandaids",
+          "label": "Band-Aids",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [
+            "basic first aid"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "antibiotic",
+          "label": "Antibiotic (Azithro/Cipro)",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [
+            "international trip"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "antiDiarrheal",
+          "label": "Anti-Diarrheal (Pepto/Imodium)",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [
+            "international trip"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "id",
+          "label": "ID / Driver License",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [
+            "required for travel"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "cards",
+          "label": "Credit Cards",
+          "category": "Documents",
+          "qty": 2,
+          "reasons": [
+            "for expenses"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "cash",
+          "label": "Cash",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [
+            "for expenses"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "passport",
+          "label": "Passport",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [
+            "international trip"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "adapter",
+          "label": "Plug Adapter",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [
+            "international trip"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "insurance",
+          "label": "Travel Insurance Card",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [
+            "for emergencies"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "phoneCharger",
+          "label": "Phone Charger",
+          "category": "Electronics",
+          "qty": 1,
+          "reasons": [
+            "individually used item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "earbuds",
+          "label": "Earbuds",
+          "category": "Electronics",
+          "qty": 1,
+          "reasons": [
+            "individually used item"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "powerBank",
+          "label": "Power Bank",
+          "category": "Electronics",
+          "qty": 1,
+          "reasons": [
+            "for charging on the go"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "plasticBags",
+          "label": "Plastic Bags",
+          "category": "Misc",
+          "qty": 1,
+          "reasons": [
+            "for laundry / wet items"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "eyeMask",
+          "label": "Sleep / Eye Mask",
+          "category": "Misc",
+          "qty": 1,
+          "reasons": [
+            "for better sleep"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "laundryBag",
+          "label": "Laundry Bag",
+          "category": "Misc",
+          "qty": 1,
+          "reasons": [
+            "to keep dirty clothes separate"
+          ],
+          "source": "rule"
+        }
+      ]
+    },
+    "formula": {
+      "summary": {
+        "totalItems": 42,
+        "totalQty": 87,
+        "byCat": {
+          "Footwear": {
+            "count": 2,
+            "qty": 5
+          },
+          "Clothing — Basics": {
+            "count": 3,
+            "qty": 19
+          },
+          "Clothing — Bottoms": {
+            "count": 3,
+            "qty": 11
+          },
+          "Clothing — Tops": {
+            "count": 2,
+            "qty": 14
+          },
+          "Clothing — Outerwear": {
+            "count": 2,
+            "qty": 5
+          },
+          "Toiletries": {
+            "count": 12,
+            "qty": 13
+          },
+          "Accessories": {
+            "count": 2,
+            "qty": 2
+          },
+          "Health": {
+            "count": 4,
+            "qty": 4
+          },
+          "Documents": {
+            "count": 5,
+            "qty": 5
+          },
+          "Electronics": {
+            "count": 4,
+            "qty": 4
+          },
+          "Misc": {
+            "count": 3,
+            "qty": 5
+          }
+        }
+      },
+      "items": [
+        {
+          "itemKey": "sneakers",
+          "label": "Sneakers / walking shoes",
+          "category": "Footwear",
+          "qty": 4,
+          "reasons": [
+            "13 days → ×4/person"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "socks",
+          "label": "Socks (pairs)",
+          "category": "Clothing — Basics",
+          "qty": 8,
+          "reasons": [
+            "13 days, summer mode"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "underwear",
+          "label": "Underwear",
+          "category": "Clothing — Basics",
+          "qty": 10,
+          "reasons": [
+            "13 days, summer mode"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "pants",
+          "label": "Pants",
+          "category": "Clothing — Bottoms",
+          "qty": 4,
+          "reasons": [
+            "13 days, summer mode"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "belt",
+          "label": "Belt",
+          "category": "Clothing — Bottoms",
+          "qty": 2,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "tshirts",
+          "label": "T-shirts / shirts",
+          "category": "Clothing — Tops",
+          "qty": 10,
+          "reasons": [
+            "13 days, summer mode"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "pajamas",
+          "label": "Pajamas / sleepwear",
+          "category": "Clothing — Basics",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "sweater",
+          "label": "Sweater / hoodie",
+          "category": "Clothing — Outerwear",
+          "qty": 3,
+          "reasons": [
+            "Min 11°C · summer mode"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "coat",
+          "label": "Light jacket",
+          "category": "Clothing — Outerwear",
+          "qty": 2,
+          "reasons": [
+            "Min 11°C"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "shorts",
+          "label": "Shorts (and swim trunks)",
+          "category": "Clothing — Bottoms",
+          "qty": 5,
+          "reasons": [
+            "Max 30°C"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "flipflops",
+          "label": "Flip-flops",
+          "category": "Footwear",
+          "qty": 1,
+          "reasons": [
+            "Summer / beach"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "lightShirts",
+          "label": "Light/breathable shirts",
+          "category": "Clothing — Tops",
+          "qty": 4,
+          "reasons": [
+            "Hot — max 30°C"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "sunscreen",
+          "label": "Sunscreen (SPF 30+)",
+          "category": "Toiletries",
+          "qty": 2,
+          "reasons": [
+            "Max UV 5.0"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "sunglasses",
+          "label": "Sunglasses",
+          "category": "Accessories",
+          "qty": 1,
+          "reasons": [
+            "Sunny forecast"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "sunHat",
+          "label": "Sun hat / cap",
+          "category": "Accessories",
+          "qty": 1,
+          "reasons": [
+            "High UV / heat"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "lipBalm",
+          "label": "Lip balm with SPF",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [
+            "Sun protection"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "toothbrush",
+          "label": "Toothbrush",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "toothpaste",
+          "label": "Toothpaste",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "deodorant",
+          "label": "Deodorant",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "shampoo",
+          "label": "Shampoo / soap",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "moisturizer",
+          "label": "Moisturizer",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "razor",
+          "label": "Razor",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "comb",
+          "label": "Comb / brush",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "nailClipper",
+          "label": "Nail clipper",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "perfume",
+          "label": "Perfume / cologne",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "hairGel",
+          "label": "Hair gel / product",
+          "category": "Toiletries",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "aspirin",
+          "label": "Aspirin / ibuprofen",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "bandaids",
+          "label": "Band-aids",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "antibiotic",
+          "label": "Antibiotic (Azithro / Cipro)",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "travelMeds",
+          "label": "Anti-diarrheal / Pepto",
+          "category": "Health",
+          "qty": 1,
+          "reasons": [
+            "International trip"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "id",
+          "label": "ID / driver license",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "cards",
+          "label": "Credit / debit cards",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "cash",
+          "label": "Cash (local currency)",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "passport",
+          "label": "Passport",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [
+            "International trip"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "adapter",
+          "label": "Plug adapter",
+          "category": "Electronics",
+          "qty": 1,
+          "reasons": [
+            "International trip"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "insurance",
+          "label": "Travel insurance card",
+          "category": "Documents",
+          "qty": 1,
+          "reasons": [
+            "International trip"
+          ],
+          "source": "rule"
+        },
+        {
+          "itemKey": "phoneCharger",
+          "label": "Phone charger",
+          "category": "Electronics",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "powerBank",
+          "label": "Power bank",
+          "category": "Electronics",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "earbuds",
+          "label": "Earbuds / headphones",
+          "category": "Electronics",
+          "qty": 1,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "plasticBags",
+          "label": "Plastic bags (laundry / wet)",
+          "category": "Misc",
+          "qty": 3,
+          "reasons": [],
+          "source": "rule"
+        },
+        {
+          "itemKey": "eyeMask",
+          "label": "Sleep / eye mask",
+          "category": "Misc",
+          "qty": 1,
           "reasons": [],
           "source": "rule"
         },
